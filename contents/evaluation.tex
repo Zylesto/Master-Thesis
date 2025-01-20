@@ -1,0 +1,83 @@
+\chapter{Evaluation of the Realization Against the Models}
+\label{chapter:evaluation}
+
+This chapter evaluates how the final system in chapter~\ref{chapter:implementation} addresses the model requirements set out in chapter~\ref{chapter:multidimensional-vulnerability-classification}. The following sections correspond to the tasks defined in the model.
+
+\section{Classification and Recommendation Concept}
+\label{section:eval-classification-concept}
+
+\paragraph{Model (Chapter~\ref{chapter:multidimensional-vulnerability-classification}).}
+The model establishes two primary processes: 
+\begin{itemize}
+  \item \emph{Classification}: Assessing a vulnerability’s severity through various inputs (e.g., \ac{CVSS}, \ac{EPSS}).
+  \item \emph{Recommendation}: Suggesting appropriate remediation or follow-up actions based on stakeholder needs, patch availability, or other contextual factors.
+\end{itemize}
+These processes are presented in the model as conceptually distinct, allowing for an independent evaluation of severity and a separate derivation of recommended steps.
+
+\paragraph{Implementation (Chapter~\ref{chapter:implementation}).}
+In practice, the system:
+\begin{itemize}
+  \item Performs classification by gathering metrics (\ac{CVSS}, \ac{EPSS}) and computing a severity score.  
+  \item Offers a recommendation workflow (\textit{e.g.}, \ac{SSVC} or decision trees) that can incorporate these classification metrics if desired, but also draws on additional data (such as user role or patch availability).  
+\end{itemize}
+Hence, the recommendation process may, but does not have to, rely on the classification score. Both classification and recommendation are available as modular components.
+
+\paragraph{Conclusion.}
+The implementation supports a \emph{separation of concerns}: Classification determines severity, while recommendations can be made with or without explicit reference to the classification output. This aligns with the model’s intent to treat classification and recommendation as distinct yet potentially complementary processes.
+
+\section{A Model for Multi-Dimensional Classification of Vulnerabilities}
+\label{section:eval-multidimensional-classification}
+
+\paragraph{Model (Section~\ref{sec:multi-dimensional-classification}).}
+The model mandates that vulnerability severity be evaluated using multiple factors (e.g., \ac{CVSS} and \ac{EPSS}) to capture both technical impact and real-world exploit likelihood.
+
+\paragraph{Implementation (Section~\ref{subsec:severity-score}).}
+The final system retrieves these metrics from different sources (see section \ref{subsec:data-acquisition}) , merges them, and normalizes them into a single severity score. It also accommodates additional dimensions (if needed) without disrupting existing logic.
+
+\paragraph{Conclusion.}
+The multi-dimensional classification requirement is \emph{successfully addressed}, as multiple inputs are considered and can be expanded for future needs.
+
+\section{An Algorithm to Compute a Classification for a Known Vulnerability}
+\label{section:eval-classification-algorithm}
+
+\paragraph{Model (Section~\ref{sec:algorithm-classifications}).}
+A clear algorithmic procedure is outlined, combining metrics (such as \ac{CVSS} and \ac{EPSS}) into a unified severity assessment. Missing data should be handled via a default mechanism.
+
+\paragraph{Implementation (Paragraph~\ref{par:cvss-epss-combination}).}
+The code checks for cached \ac{CVSS} and \ac{EPSS}, scales \ac{EPSS} to align with the 0--10 \ac{CVSS} range, and computes an average. If critical data is absent, a placeholder score (10.1) ensures unknown vulnerabilities are prioritized.
+
+\paragraph{Conclusion.}
+The classification algorithm from the model is \emph{fully implemented} and includes a fallback for incomplete information.
+
+\section{Model and Algorithm for Remediation Recommendation}
+\label{section:combined-remediation}
+
+\paragraph{Model (Section~\ref{sec:remediation_recommendation}).}
+The model prescribes a framework for suggesting specific remediation actions (e.g., immediate patching or monitoring) based on classification results and stakeholder context. Different user roles (e.g., developers, security advisors) follow tailored decision paths, factoring in patch availability and asset criticality. This allows for meaningful, role-specific recommendations that incorporate the likelihood of exploit, criticality levels, and other contextual parameters.
+
+\paragraph{Algorithm (Section~\ref{sec:algorithm-remediation}).}
+An explicit decision-tree-like or rule-based algorithm adapts to exploit likelihood, stakeholder roles, and available fixes. By evaluating relevant fields (e.g., patch availability, exploit probability, system criticality), it produces step-by-step guidelines, which are stored for tracking and future reference. This ensures consistent and repeatable recommendations across multiple user roles and vulnerability scenarios.
+
+\paragraph{Implementation (Section~\ref{subsec:ssvc-integration}).}
+The system integrates the model and algorithm by offering different decision paths for each stakeholder (e.g., developers, security advisors). Developers can focus on immediate patch availability, while security advisors assess system criticality and potential attack vectors. Through this context-aware approach, role-specific and comprehensive remediation measures are generated and executed. The final recommendation is tracked to enable continual improvement and to provide a reference for similar future cases.
+
+\paragraph{Conclusion.}
+The remediation model and its algorithmic foundation are \emph{fully realized}: classification outputs drive role-specific remedial actions, incorporating stakeholder context into a structured, rule-based process. As a result, the approach remains \emph{completely operational}, guaranteeing consistent, repeatable, and context-sensitive recommendations for a wide range of users and threat situations.
+
+
+\section{A Model to Rank-Order All Classified Vulnerabilities}
+\label{section:eval-rank-order}
+
+\paragraph{Model (Section~\ref{sec:rank-order-vulnerabilities}).}
+A ranking mechanism should reorder vulnerabilities so that critical or unknown (missing data) vulnerabilities appear at the top for immediate attention.
+
+\paragraph{Implementation (Section~\ref{sec:ranking-implementation}).}
+Vulnerabilities are sorted by their composite severity score in descending order. Entries with placeholder scores (10.1) appear first, ensuring that incompletely assessed vulnerabilities are not overlooked.
+
+\paragraph{Conclusion.}
+Rank-ordering as specified in the model is \emph{fully achieved}, providing a clear prioritization scheme for vulnerability management.
+
+\section{Conclusion}
+\label{section:evaluation-conclusion}
+
+Overall, the system described in chapter~\ref{chapter:implementation} fulfills all tasks set out in chapter~\ref{chapter:multidimensional-vulnerability-classification}. Each element of the model—including multi-dimensional classification, classification algorithms, remediation recommendations, and ranking—has been translated into a functional implementation. This alignment demonstrates a coherent end-to-end solution that meets the stated requirements.
