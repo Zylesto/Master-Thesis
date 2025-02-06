@@ -1,0 +1,107 @@
+\chapter{Requirements}
+\label{chap:requirements}
+
+This chapter presents the functional and non-functional requirements of the proposed system, structured around four key components. Each component is associated with both a model and an algorithm, as follows:
+\begin{enumerate}
+    \item \textbf{A model and an algorithm for multi-dimensional classification of vulnerabilities,}
+    \item \textbf{A model and an algorithm to compute a classification for a known vulnerability in the context of a given software,}
+    \item \textbf{A model and an algorithm to make recommendations for remediation,}
+    \item \textbf{A model and an algorithm to rank-order all known classified vulnerabilities.}
+\end{enumerate}
+
+\section{Functional Requirements}
+
+\subsection{RQ1: A Model and an Algorithm for Multi-Dimensional Classification of Vulnerabilities}
+\label{req:RQ1}
+\begin{itemize}
+    \item \textbf{RQ1.1: Multiple Classification Dimensions}
+    \label{req:RQ1.1}  
+    The system must integrate multiple dimensions to classify vulnerabilities.
+
+    \item \textbf{RQ1.2: Handling of Missing Data}
+    \label{req:RQ1.2}  
+    The system must be able to manage missing or incomplete data while still providing meaningful classification results.
+
+    \item \textbf{RQ1.3: User Interface for Score Explanation}
+    \label{req:RQ1.3}
+    \begin{itemize}
+        \item \textbf{RQ1.3.1: Score-Details Button}
+        \label{req:RQ1.3.1}  
+        The system must include a “Show Score-Details” button that displays key classification details.
+
+        \item \textbf{RQ1.3.2: Tooltip Explanations}
+        \label{req:RQ1.3.2}  
+        The system must provide hover-based tooltips for each dimension (e.g., CVSS vector attributes) to explain how each attribute affects severity.
+
+        \item \textbf{RQ1.3.3: Prefilled \ac{CVSS} Calculator Link}
+        \label{req:RQ1.3.3}  
+        The system must offer a direct link to a prefilled \ac{CVSS} calculator, allowing users to quickly explore alternative scoring scenarios.
+    \end{itemize}
+\end{itemize}
+
+\subsection{RQ2: A Model and an Algorithm to Compute a Classification for a Known Vulnerability}
+\label{req:RQ2}
+\begin{itemize}
+    \item \textbf{RQ2.1: Data Gathering}
+    \label{req:RQ2.1}  
+    The system must collect vulnerability data from external sources.
+
+    \item \textbf{RQ2.2: Context-Aware Scoring}
+    \label{req:RQ2.2}  
+    The system must compute severity scores by for each vulnerability.
+
+    \item \textbf{RQ2.3: Vulnerability Categorization}
+    \label{req:RQ2.3}  
+    The system must classify vulnerabilities (e.g., Critical, High, Medium, Low) based on the calculated severity score.
+\end{itemize}
+
+\subsection{RQ3: A Model and an Algorithm to Make Recommendations for Remediation}
+\label{req:RQ3}
+\begin{itemize}
+    \item \textbf{RQ3.1: Remediation Guidance}
+    \label{req:RQ3.1}  
+    The system must generate remediation recommendations for identified vulnerabilities.
+
+    \item \textbf{RQ3.2: Role-Based Recommendations}
+    \label{req:RQ3.2}  
+    Recommendations must be tailored to different stakeholder roles (e.g., developers, security coordinators) and asset criticality.
+
+    \item \textbf{RQ3.3: Action Categorization}
+    \label{req:RQ3.3}  
+    The system must categorize recommended actions (e.g., “Immediate Patch,” “Monitor and Prepare Patch,” or “Deprioritize”).
+\end{itemize}
+
+\subsection{RQ4: A Model and an Algorithm to Rank-Order All Known Classified Vulnerabilities}
+\label{req:RQ4}
+\begin{itemize}
+    \item \textbf{RQ4.1: Severity-Based Ranking}
+    \label{req:RQ4.1}  
+    The system must provide a ranked list of all classified vulnerabilities in descending order of severity.
+
+    \item \textbf{RQ4.2: Priority for Incomplete Data}
+    \label{req:RQ4.2}  
+    Vulnerabilities with missing data must be placed at the top of the list to prompt immediate investigation.
+
+    \item \textbf{RQ4.3: Continuous Updating}
+    \label{req:RQ4.3}  
+    The system must recalculate the ranking each day.
+\end{itemize}
+
+\section{Non-Functional Requirements}
+\begin{itemize}
+    \item \textbf{RQNF1: Usability}
+    \label{req:nonf1}  
+    The user interface must be intuitive, providing clear explanations for scores, remediation options, and any missing data.
+    
+    \item \textbf{RQNF2: Scalability}
+    \label{req:nonf2}  
+    The system must efficiently handle large volumes of vulnerabilities, ensuring timely classification and updates.
+    
+    \item \textbf{RQNF3: Maintainability}
+    \label{req:nonf3}  
+    Configuration for weighted scoring parameters must be easily adjustable without requiring changes to core system logic.
+    
+    \item \textbf{RQNF4: Reliability}
+    \label{req:nonf4}  
+    Data retrieval from external sources must be robust, with appropriate failure handling to avoid partial or corrupted information.
+\end{itemize}

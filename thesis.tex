@@ -85,11 +85,17 @@ This work is licensed under the Creative Commons Attribution 4.0 International l
 %% Re-install the page breaks between chapters
 \makeatletter
 \renewcommand\chapter{\if@openright\cleardoublepage\else\clearpage\fi
-  \thispagestyle{plain}%
+  \thispagestyle{empty}% Remove headers and footers on blank pages
   \global\@topnum\z@
   \@afterindentfalse
   \secdef\@chapter\@schapter}
 \makeatother
+
+\fancypagestyle{empty}{
+  \fancyhf{} % Clear all headers and footers
+  \renewcommand{\headrulewidth}{0pt} % Remove header rule
+  \renewcommand{\footrulewidth}{0pt} % Remove footer rule
+}
 
 \chapter*{Abstract}\label{chapter:abstract}
 \input contents/abstract.tex
@@ -116,6 +122,7 @@ This work is licensed under the Creative Commons Attribution 4.0 International l
 
 \input contents/introduction.tex
 \input{contents/literature-review.tex}
+\input{contents/requirements.tex}
 \input{contents/multidimensional-framework.tex}
 \input{contents/architecture.tex}
 \input{contents/implementation.tex}

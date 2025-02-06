@@ -5,19 +5,19 @@ In today's software development landscape, the use of open-source components is 
 
 The complexity of modern software projects leads to extensive dependency graphs that are difficult to oversee. A single project can utilize hundreds of open-source libraries, each bringing its own dependencies. This complexity makes it challenging to track and manage vulnerabilities across the entire software supply chain.
 
-A notable example is the Heartbleed bug in the OpenSSL library \footnote{\url{https://heartbleed.com/}}. This vulnerability was actively exploited and led to the exposure of encrypted communications, affecting millions of servers worldwide. Such incidents demonstrate the potential impact of exploiting vulnerabilities in widely used open-source components.
+A notable example is the Heartbleed bug in the OpenSSL library \footnote{\url{https://heartbleed.com/}}. This vulnerability was actively exploited and led to the exposure of encrypted communications, affecting millions of servers worldwide.
 
-\ac{SCA} tools and \ac{SBOM} have established themselves as instruments for providing transparency about the components used and their security status. They enable developers to maintain an inventory of all components and check them for known vulnerabilities. However, existing solutions often reach their limits when it comes to classifying newly discovered vulnerabilities and assessing their impact on a specific software project.
+\ac{SCA} tools and \ac{SBOM}s have established themselves as instruments for providing transparency about the components used and their security status. They enable developers to maintain an inventory of all components and check them for known vulnerabilities. However, existing solutions often reach their limits when it comes to classifying newly discovered vulnerabilities and assessing their impact on a specific software project.
 
 The \ac{FAU} develops its own \ac{SCA}-Tool\footnote{\url{https://scatool.com/about/}}, which aims to facilitate the secure, efficient, and regulatory-compliant use of open-source software within modern software engineering projects. Specifically, the tool addresses three critical domains:
 
 \begin{itemize}
     \item \textbf{Governance:} Ensures that only approved open-source licenses are utilized, thereby aiding organizations in adhering to internal policies and mitigating potential legal risks.
     \item \textbf{Compliance:} Simplifies the generation of legal notices for license-compliant distribution of software products, reducing the complexity and overhead of adhering to license requirements.
-    \item \textbf{Security:} Provides continuous monitoring of open-source code for newly discovered vulnerabilities, delivering actionable intelligence to mitigate risks associated with software dependencies.
+    \item \textbf{Vulnerability Management:} Provides continuous monitoring of open-source code for newly discovered vulnerabilities, delivering actionable intelligence to mitigate risks associated with software dependencies.
 \end{itemize}
 
-The already developed software solution \ac{VA}, serving as the security component of \ac{FAU}'s \ac{SCA}-Tool, addresses these challenges by accepting \ac{SBOM} files and continuously checking the contained components for known vulnerabilities. Through a web interface, developers are presented with the components they use, potential risks, and possible remediation measures. The scoring system uses the \ac{CVSS} to sort vulnerabilities by urgency \autocite{nehrke_webdienst_2023}. Despite its structured approach, \ac{CVSS} faces criticism for assigning numerical values to qualitative data without sufficient empirical justification, leading to inconsistent and sometimes misleading scores. Studies have shown high variability in \ac{CVSS} scoring among professionals, with score discrepancies of 2--4 points being common\autocite{spring_time_2021}.
+The already developed software solution \ac{VA}, serving as the vulnerability management component of \ac{FAU}'s \ac{SCA}-Tool, addresses these challenges by accepting \ac{SBOM} files and continuously checking the contained components for known vulnerabilities. Through a web interface, developers are presented with the components they use, potential risks, and possible remediation measures. However, \ac{VA} currently lacks an mechanism to generate tailored remediation recommendations based on the specific software context. The scoring system uses the \ac{CVSS} to sort vulnerabilities by urgency \autocite{nehrke_webdienst_2023}. Despite its structured approach, \ac{CVSS} faces criticism for assigning numerical values to qualitative data without sufficient empirical justification, leading to inconsistent and sometimes misleading scores. Studies have shown high variability in \ac{CVSS} scoring among professionals, with discrepancies of 2--4 points on a scale from 0 to 10 being common \autocite{spring_time_2021}.
 
 Building upon the results of \ac{VA}, the goal of this master's thesis is to address these gaps by developing an extended model for the multidimensional classification of vulnerabilities. This includes:
 
@@ -31,4 +31,4 @@ Building upon the results of \ac{VA}, the goal of this master's thesis is to add
     \end{itemize}
 \end{itemize}
 
-By extending \ac{VA}, the previously identified gaps will be addressed, enhancing  the functionality of the software.
+By extending \ac{VA}, this thesis aims to improve vulnerability classification by addressing the limitations of \ac{CVSS}'s numerical scoring, incorporating multidimensional assessment criteria, and providing actionable remediation recommendations. These enhancements will increase the practical usability and accuracy of vulnerability prioritization and remediation.

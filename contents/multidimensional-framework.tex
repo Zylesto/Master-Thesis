@@ -1,4 +1,4 @@
-\chapter{Multidimensional Vulnerability Classification and Remediation Framework}
+\chapter{Multidimensional Vulnerability \\ Classification and Remediation Framework}
 \label{chapter:multidimensional-vulnerability-classification}
 
 This chapter introduces a multi-dimensional framework for classifying and remediating vulnerabilities by integrating factors such as exploit predictability, vulnerability age, attack complexity, and empirical threat intelligence. Building on insights from existing approaches like \ac{CVSS}, \ac{EPSS}, and \ac{SSVC} (see section \ref{sec:existing-vulnerability-identification}) and industry-leading security solutions like \ac{R7IVM}, \ac{TVM}, and Snyk (see section \ref{sec:multidimensional-approaches-tools}), this framework addresses their limitations by combining technical severity with real-world exploitability and stakeholder-specific remediation priorities.
@@ -76,11 +76,15 @@ To enhance the user’s understanding of the vulnerability scoring and prioritiz
 \begin{itemize}
     \item \textbf{Score Details Button:} The "Show Score-Details" button in the user interface provides detailed information about the calculated score. When clicked, it displays the following details:
     \begin{itemize}
-        \item \textbf{\ac{CVE} ID:} Shows the Common Vulnerabilities and Exposures ID, a unique identifier for the vulnerability. It helps security professionals track and reference the issue across different platforms and databases.
-        \item \textbf{\ac{CVSS} Score (v3.1):} Displays the \ac{CVSS} (Common Vulnerability Scoring System) score, representing the severity of the vulnerability on a scale from 0.0 to 10.0. Higher scores indicate more critical vulnerabilities.
-        \item \textbf{\ac{CVSS} Vector:} Provides the \ac{CVSS} vector string, which describes the characteristics of the vulnerability, such as attack vector, attack complexity, and privileges required for exploitation.
-        \item \textbf{\ac{EPSS} Score:} Shows the Exploit Prediction Scoring System score, which estimates the likelihood of the vulnerability being exploited in the wild.
-        \item \textbf{Severity Score:} Displays the overall severity score, calculated based on the combination of the \ac{CVSS} Score and \ac{EPSS} Score. This score helps prioritize remediation efforts effectively.
+        \item \textbf{\ac{CVE} ID:} Shows the \textit{Common Vulnerabilities and Exposures ID}, a unique identifier for the vulnerability. It helps security professionals track and reference the issue across different platforms and databases.
+        \item \textbf{\ac{CVSS} Score (v3.1):} Displays the \textit{Common Vulnerability Scoring System} score, representing the severity of the vulnerability on a scale from 0.0 to 10.0. Higher scores indicate more critical vulnerabilities.
+        \item \textbf{\ac{CVSS} Vector:} Provides the \textit{\ac{CVSS}} vector string, which describes the characteristics of the vulnerability, such as attack vector, attack complexity, and privileges required for exploitation.
+        \item \textbf{\ac{EPSS} Score:} Shows the \textit{Exploit Prediction Scoring System} score, which estimates the likelihood of the vulnerability being exploited in the wild.
+        \item \textbf{Severity Score:} Displays the overall severity score, calculated based on the combination of the \textit{\ac{CVSS}} Score and \textit{\ac{EPSS}} Score. This score helps prioritize remediation efforts effectively.
+        \item \textbf{Hover Tooltips for Vectors:}  
+        Displays hover-based tooltips for each \textit{\ac{CVSS}} vector attribute. When the user places the cursor over a specific field (e.g., “Attack Vector” or “Attack Complexity”), a concise explanation appears to clarify its impact on the vulnerability assessment.
+        \item \textbf{Direct Link to the CVSS Calculator:}  
+        A direct link to a prefilled \textit{\ac{CVSS}} calculator, ensuring that users can quickly review the existing \textit{\ac{CVSS}} metrics. This link is automatically populated with the relevant vector data, allowing rapid exploration of different scoring scenarios.
     \end{itemize}
 \end{itemize}
 
@@ -208,8 +212,3 @@ This model provides a structured approach for ranking all known vulnerabilities 
 \end{enumerate}
 
 This ranking model complements the multi-dimensional classification and remediation framework by establishing a clear, actionable prioritization order. It ensures that both high-risk and data-incomplete vulnerabilities are addressed promptly, aligning with strategic security objectives and operational capacity.
-
-
-
-
-

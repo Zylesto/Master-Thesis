@@ -1,26 +1,26 @@
 \chapter{Literature review}
 \label{chapter:literature-review}
 
-To enhance the functionality of \ac{VA}, it is essential to conduct a thorough review of existing research in vulnerability classification. This chapter provides an overview of current models, tools, and approaches in the field. The insights gained will serve as a foundation for the development of a multidimensional classification model and algorithms to assess and prioritize vulnerabilities in software projects.
+To enhance the functionality of vulnerability management in \ac{SCA} tool, it is essential to conduct a thorough review of existing research in vulnerability classification. This chapter provides an overview of current models, tools, and approaches in the field. The insights gained will serve as foundation for the development of a multidimensional classification model and algorithms to assess and prioritize vulnerabilities in software projects.
 
 \section{Existing Vulnerability Identification and Classification Models}
 \label{sec:existing-vulnerability-identification}
 
 Vulnerability classification models provide a structured approach to assessing and prioritizing security vulnerabilities based on factors such as severity, exploitability, and potential impact.
 
-Given that \ac{VA} retrieves vulnerability information from the \ac{OSV} Database, which heavily relies on the \ac{CVE} system for uniquely identifying vulnerabilities, it is essential to include \ac{CVE} in this discussion. \ac{CVE} acts as the foundational identification system that standardizes the naming of vulnerabilities, enabling consistent referencing across databases, tools, and classification models. While \ac{CVE} itself is not a classification system, it serves as a crucial input for models like \ac{CVSS}, \ac{EPSS}, and \ac{SSVC}, which build upon \ac{CVE}-identified vulnerabilities to provide deeper insights into their severity, exploitability, and remediation priorities.
+Given that vulnerability management system in \ac{SCA} tool retrieves vulnerability information from the \ac{OSV} Database, which heavily relies on the \ac{CVE} system for uniquely identifying vulnerabilities, it is essential to include \ac{CVE} in this discussion. \ac{CVE} acts as the foundational identification system that standardizes the naming of vulnerabilities, enabling consistent referencing across databases, tools, and classification models. While \ac{CVE} itself is not a classification system, it serves as a crucial input for models like \ac{CVSS}, \ac{EPSS}, and \ac{SSVC}, which build upon \ac{CVE}-identified vulnerabilities to provide deeper insights into their severity, exploitability, and remediation priorities.
 
 \ac{CVSS} has been selected for its structured scoring of vulnerabilities based on severity. However, to address the limitations of \ac{CVSS}, the \ac{EPSS} is included to enhance prioritization with dynamic threat intelligence. \ac{SSVC} is incorporated because it considers the specific needs and roles of different stakeholders, using tailored decision trees to guide context-sensitive prioritization and remediation actions. By focusing on stakeholder-specific factors, \ac{SSVC} helps organizations choose appropriate responses, such as patching, monitoring, or deprioritizing vulnerabilities, based on their unique operational contexts and resources.
 
-Other models, such as \ac{CWE}\footnote{\url{https://cwe.mitre.org/}} and \ac{CAPEC}\footnote{\url{https://capec.mitre.org/}}, primarily focus on categorizing weaknesses and attack patterns. While these models are valuable in broader security contexts, they are less applicable to the specific goals of \ac{VA}, which focuses on vulnerability classification and remediation.
+Other models, such as \ac{CWE}\footnote{\url{https://cwe.mitre.org/}} and \ac{CAPEC}\footnote{\url{https://capec.mitre.org/}}, primarily focus on categorizing weaknesses and attack patterns. While these models are valuable in broader security contexts, they are less applicable to the specific goals of \ac{SCA} tools vulnerability management, which focuses on vulnerability classification and remediation.
 
-By integrating \ac{CVE} as the backbone for vulnerability identification and leveraging complementary classification models such as \ac{CVSS}, \ac{EPSS}, and \ac{SSVC}, \ac{VA} ensures a comprehensive approach to assessing and addressing security vulnerabilities.
+In the context of vulnerability assessment, the vulnerability management system in the \ac{SCA} tool builds upon \ac{CVE}, which serves as an identification system for publicly disclosed vulnerabilities. \ac{CVE} provides unique identifiers that allows security systems to retrieve relevant information for a specific vulnerability from various vulnerability databases.
 
 \subsection{Common Vulnerabilities and
-Exposure}
-\label{subsec:common-vulnerabilities-exposure}
+Exposures}
+\label{subsec:common-vulnerabilities-exposures}
 
-The \ac{CVE} system provides a standardized method for identifying and referencing publicly disclosed cybersecurity vulnerabilities and exposures. It is maintained by the \ac{MITRE} and funded by the \ac{CISA}. Each vulnerability in the \ac{CVE} system is assigned a unique identifier, such as \texttt{CVE-2024-12345}, which acts as a universal reference point for tools, databases, and discussions related to cybersecurity.
+The \ac{CVE} system provides a well-established and standardized framework for uniquely identifying and referencing publicly disclosed cybersecurity vulnerabilities. It is maintained by the \ac{MITRE} and funded by the \ac{CISA}. Each vulnerability in the \ac{CVE} system is assigned a unique identifier, such as \texttt{CVE-2024-12345}, which acts as a universal reference point for tools, databases, and discussions related to cybersecurity. The \ac{CVE} entries contain basic metadata, such as the vulnerability description, affected products, and references to further details. However, \ac{CVE} itself does not include technical details, exploit code, or remediation instructions. Instead, it serves as a reference system that links to external sources for further information.
 
 The structure of a \ac{CVE} identifier follows the format \texttt{CVE-YYYY-NNNNN}, where:
 \begin{itemize}
@@ -36,7 +36,7 @@ For example, in the identifier \texttt{CVE-2024-12345}:
 
 The primary objective of \ac{CVE} is to improve the coordination and sharing of vulnerability information across different organizations, tools, and platforms. By providing a consistent and unique identifier for each vulnerability, \ac{CVE} enables organizations to align their vulnerability management processes, ensuring that the same vulnerability is referenced accurately in security tools, advisories, and incident response processes.
 
-While \ac{CVE} is not a classification or scoring system, it plays a foundational role in vulnerability management by serving as the baseline for tools like the \ac{CVSS}, which assess the severity of vulnerabilities, and the \ac{EPSS}, which predicts their likelihood of exploitation. The \ac{CVE} entries contain basic metadata, such as the vulnerability description, affected products, and references to further details. However, \ac{CVE} itself does not provide technical details, exploit code, or remediation instructions, instead linking to external sources for additional information.
+While \ac{CVE} is not a classification or scoring system, it enables security tools and vulnerability management systems to retrieve vulnerability data, such as \ac{CVSS} and \ac{EPSS}, from databases by providing a standardized identification mechanism.
 \autocite{mitre_corporation_overview_2024}.
 
 \subsection{Common Vulnerability Scoring System}
@@ -57,7 +57,7 @@ Despite its structured approach, the \ac{CVSS} scoring system faces criticism fo
 \subsubsection{Evolution of CVSS Versions}
 \label{subsubsec:cvss-versions}
 
-The \ac{CVSS} has evolved over time to address the limitations of earlier versions. Each new version introduces improvements to enhance the accuracy and usability of vulnerability assessments.
+According to \textcite{balbix_inc_cvss_2020}, the \ac{CVSS} has evolved over time to address the limitations of earlier versions. Each new version introduces improvements to enhance the accuracy and usability of vulnerability assessments.
 
 \paragraph{CVSS Version 1}
 \label{par:cvss-v1}
@@ -72,7 +72,7 @@ The second version improved upon the first version by introducing more detailed 
 \paragraph{CVSS Version 3}
 \label{par:cvss-v3}
 
-The third generation further refined the scoring system by adding new metrics and modifying existing ones for a more precise and context-aware evaluation. It offers detailed considerations of the attack vector and includes metrics for privileges required and user interaction. These improvements help organizations better prioritize risks and develop effective security strategies \autocite{balbix_inc_cvss_2020}.
+The third generation further refined the scoring system by adding new metrics and modifying existing ones for a more precise and context-aware evaluation. It offers detailed considerations of the attack vector and includes metrics for privileges required and user interaction. These improvements help organizations better prioritize risks and develop effective security strategies.
 
 \paragraph{CVSS Version 3.1}
 \label{par:cvss-v3_1}
@@ -83,12 +83,9 @@ The third generation further refined the scoring system by adding new metrics an
 \paragraph{CVSS Version 4}
 \label{par:cvss-v4}
 
-The latest \ac{CVSS}-Version has been proposed to address ongoing criticisms but is not yet widely adopted or completely standardized yet (latest version v.1.2 (2024-06-18). Organizations often hesitate to transition to a new version until it gains broad industry acceptance. Consequently, CVSS Versions 2 and 3 remain the dominant standards for vulnerability assessment \autocite{first_cvss_2024_v4}.
+The latest \ac{CVSS}-Version has been proposed to address ongoing criticisms but, at the time of writing, has not yet widely adopted or completely standardized yet (latest version V.1.2, released on June 18, 2024). Organizations often hesitate to transition to a new version until it gains broad industry acceptance. Consequently, \ac{CVSS} Version 3.1 remains the dominant standard for vulnerability assessment \autocite{first_cvss_2024_v4}.
 
-\subsubsection{Summary and Outlook}
-\label{subsubsec:summary-outlook}
-
-In essence, while \ac{CVSS} helps assess technical severity, it does not fully account for security risk, leaving room for improvement. Suggested enhancements include skipping the conversion of qualitative measurements to numerical scores and instead mapping \ac{CVSS} vectors directly to decision or response priorities. Furthermore, increasing transparency in the formula's creation and better accounting for context—such as whether a vulnerability affects critical systems or is part of a chain of vulnerabilities—would significantly improve its usefulness \autocite{spring_time_2021}.
+\ac{CVSS} helps assess technical severity, it does not fully account for security risk, leaving room for improvement. Suggested enhancements include skipping the conversion of qualitative measurements to numerical scores and instead mapping \ac{CVSS} vectors directly to decision or response priorities. Furthermore, increasing transparency in the formula's creation and better accounting for context - such as whether a vulnerability affects critical systems or is part of a chain of vulnerabilities - would significantly improve its usefulness \autocite{spring_time_2021}.
 
 \subsection{Exploit Prediction Scoring System}
 \label{subsec:epss-theoretical-basis}
@@ -108,20 +105,20 @@ The \ac{EPSS} is an open, data-driven framework for assessing the threat posed b
 
 The system addresses the challenges of prioritization in vulnerability management by enabling security professionals to allocate resources more efficiently and focus on vulnerabilities that are more likely to be exploited.
 
-Overall, \ac{EPSS} significantly advances security risk assessment by offering an open, data-driven method that directly predicts the likelihood of a vulnerability being exploited. Unlike \ac{CVSS}, which rates severity based on inherent characteristics without considering actual exploitation probability, \ac{EPSS} uses empirical data and machine learning to focus on vulnerabilities posing the greatest real-world threat, enhancing decision-making in IT security \autocite{jacobs_exploit_2021}.
+Overall, \ac{EPSS} significantly advances security risk assessment by offering an open, data-driven method that directly predicts the likelihood of a vulnerability being exploited. Unlike \ac{CVSS}, which rates severity based on inherent characteristics without considering actual exploitation probability, \ac{EPSS} employs empirical data and a logistic regression model with elastic net regularization to predict real-world threats, enhancing decision-making in IT security \autocite{jacobs_exploit_2021}.
 
 \subsection{Stakeholder-Specific Vulnerability Categorization}
 \label{subsec:stakeholder-specific-vulnerability}
 
 The Stakeholder-Specific Vulnerability Categorization (\ac{SSVC}) is a decision-making framework designed to enhance vulnerability management by focusing on the specific needs and contexts of different stakeholders. Unlike \ac{CVSS}, which provides a general severity score based on technical characteristics, \ac{SSVC} uses tailored decision trees to guide organizations through prioritization actions relevant to their unique situations.
 
-\ac{SSVC} emphasizes the importance of context and the specific roles of organizations in vulnerability management. It recognizes that different stakeholders — such as software vendors, deployers, and coordinators — have diverse priorities and resources. By framing decisions directly through qualitative criteria rather than relying on numerical severity scores, \ac{SSVC} aims to provide clear and actionable guidance. The decision trees in \ac{SSVC} lead users through a series of considerations, such as exploitability, exposure, and mission impact, resulting in specific recommended actions.
+\ac{SSVC} emphasizes the importance of context and the specific roles of organizations in vulnerability management. It recognizes that different stakeholders  -  such as software vendors, deployers, and coordinators  -  have diverse priorities and resources. By framing decisions directly through qualitative criteria rather than relying on numerical severity scores, \ac{SSVC} aims to provide clear and actionable guidance. The decision trees in \ac{SSVC} lead users through a series of considerations, such as exploitability, exposure, and mission impact, resulting in specific recommended actions.
 
 By incorporating stakeholder-specific factors, \ac{SSVC} enables organizations to make informed decisions that are better aligned with their operational realities.
 
 Overall, \ac{SSVC} advances vulnerability management by offering a customizable, decision-focused framework that addresses the limitations of one-size-fits-all solutions like \ac{CVSS}. It enhances decision-making by providing stakeholders with a practical method to prioritize vulnerabilities based on qualitative data and their specific needs, thereby improving the effectiveness of vulnerability remediation efforts \autocite{spring_prioritizing_2021}.
 
-\section{Existing Multidimensional Approaches and Tools for Vulnerability Detection, Assessment, and Remediation}
+\section{Existing Multidimensional Approaches and \\ Tools for Vulnerability Detection, \\ Assessment, and Remediation}
 \label{sec:multidimensional-approaches-tools}
 
 This section presents well-known tools for vulnerability detection, assessment, and remediation, analyzing their use of multidimensional approaches. These tools are evaluated based on how they integrate factors like severity, exploitability, risk, and remediation strategies to effectively prioritize and address vulnerabilities.
@@ -146,12 +143,12 @@ The exposure dimension evaluates how accessible a vulnerability is, particularly
 
 Another key dimension is business impact, which is determined through a tagging system within InsightVM. This allows organizations to adjust the prioritization of vulnerabilities based on the criticality of the affected assets, such as systems that host sensitive data.
 
-In terms of remediation, InsightVM integrates automated workflows to facilitate the resolution of vulnerabilities. Once vulnerabilities are assessed and prioritized, they can be assigned directly to remediation teams via ticketing systems such as Jira \footnote{\url{https://www.atlassian.com/de/software/jira}} and ServiceNow \footnote{\url{https://www.servicenow.com/}} \autocite{rapid7_live_2017}.
+In terms of remediation, InsightVM integrates automated workflows to facilitate the resolution of vulnerabilities. Through built-in connections, it can integrate with ticketing systems such as Jira \footnote{\url{https://www.atlassian.com/de/software/jira}} and ServiceNow \footnote{\url{https://www.servicenow.com/}}, enabling automated ticket creation and management. These tickets can be directly assigned to remediation teams for manual resolution. The integration also supports bi-directional synchronization, ensuring that updates in ServiceNow are reflected in InsightVM and vice versa \autocite{rapid7_live_2017}.
 
 \subsection{Snyk}
 \label{subsec:snyk}
 
-Snyk is a platform for vulnerability detection and remediation that employs a multidimensional approach. In addition to traditional vulnerability detection, Snyk monitors multiple vulnerability databases, such as \ac{CVE}s from the \ac{NVD} and others, to ensure comprehensive coverage of known vulnerabilities. Snyk also tracks user activity on GitHub, including issues, pull requests (PRs), and commit messages that may indicate the presence of a security flaw. This is complemented by bulk research, using tools to identify repeated security patterns across open-source packages, and manual audits conducted by the Snyk Security team to scrutinize widely-used packages for vulnerabilities \autocite{snyk_snyk_2024}. 
+Snyk is a platform for vulnerability detection and remediation that employs a multidimensional approach. In addition to traditional vulnerability detection, Snyk monitors multiple vulnerability databases, such as \ac{CVE}s from the \ac{NVD} and others, to ensure comprehensive coverage of known vulnerabilities. Snyk also tracks user activity on GitHub, including issues, pull requests, and commit messages that may indicate the presence of a security flaw. This is complemented by tools that identify recurring security patterns across open-source packages, as well as manual audits conducted by the Snyk Security team to scrutinize widely used packages for vulnerabilities \autocite{snyk_snyk_2024}.
 
 Furthermore, Snyk’s proprietary vulnerability database enriches these public sources by adding vulnerabilities that may not yet be publicly disclosed, allowing for early detection of security issues. This combination of multiple data sources enhances the breadth and depth of Snyk’s detection capabilities \autocite{snyk_snyk_2024-1}.
 
@@ -162,7 +159,7 @@ By incorporating data from \ac{NVD} and its own proprietary database, Snyk’s a
 \subsection{Other Multidimensional Approaches}
 \label{subsec:other-multidimensional-approaches}
 
-In addition to the tools discussed, other frameworks have adopted multidimensional approaches to vulnerability assessment, incorporating similar metrics and dimensions. For example, \ac{MDE} and \ac{VMDR} each utilize multidimensional frameworks that address factors like exploitability, threat intelligence, and asset criticality. These platforms, while varying in methodology, fundamentally rely on the same core principles — prioritizing vulnerabilities based on contextual risk factors and real-world impact. Consequently, the multidimensional approaches presented here provide a representative overview of current practices in comprehensive vulnerability assessment \autocite{microsoft_compare_2024, qualys_qualys_2022}.
+In addition to the tools discussed, other frameworks have adopted multidimensional approaches to vulnerability assessment, incorporating similar metrics and dimensions. For example, \ac{MDE} and \ac{VMDR} each utilize multidimensional frameworks that address factors like exploitability, threat intelligence, and asset criticality. These platforms, while varying in methodology, fundamentally rely on the same core principles  -  prioritizing vulnerabilities based on contextual risk factors and real-world impact. Consequently, the multidimensional approaches presented here provide a representative overview of current practices in comprehensive vulnerability assessment \autocite{microsoft_compare_2024, qualys_qualys_2022}.
 
 \section{Vulnerability Databases and Remediation Resources}
 \label{sec:vulnerability-databases-resources}
@@ -172,7 +169,7 @@ This section introduces well-known vulnerability databases that play a crucial r
 \subsection{Open Source Vulnerabilities}
 \label{subsec:open-source-vulnerabilities}
 
-The \ac{OSV} project provides a platform for identifying known vulnerabilities in third-party open-source dependencies, enabling developers to prioritize remediation efforts based on the impact of these vulnerabilities. The \ac{OSV} infrastructure aggregates data from multiple vulnerability databases that adhere to the OpenSSF Vulnerability format \footnote{\url{https://ossf.github.io/osv-schema/}}, ensuring consistency and interoperability. By using bisection and version analysis, \ac{OSV} represents affected versions for each vulnerability, which aids in applying targeted remediation measures. The project aggregates data through with sources including the \ac{GAD}, PyPI \footnote{\url{https://github.com/pypa/advisory-database}}, and the Go Vulnerability Database \footnote{\url{https://github.com/golang/vulndb}} \autocite{osv_introduction_2024}.
+The \ac{OSV} project provides a platform for identifying known vulnerabilities in third-party open-source dependencies, enabling developers to prioritize remediation efforts based on the impact of these vulnerabilities. The \ac{OSV} infrastructure aggregates data from multiple vulnerability databases that adhere to the \ac{OpenSSF} \footnote{\url{https://ossf.github.io/osv-schema/}}, ensuring consistency and interoperability. By using bisection and version analysis, \ac{OSV} represents affected versions for each vulnerability, which aids in applying targeted remediation measures. The project aggregates data through with sources including the \ac{GAD}, PyPI \footnote{\url{https://github.com/pypa/advisory-database}}, and the Go Vulnerability Database \footnote{\url{https://github.com/golang/vulndb}} \autocite{osv_introduction_2024}.
 
 \subsection{National Vulnerability Database}
 \label{subsec:national-vulnerability-database}
@@ -184,7 +181,7 @@ While the \ac{NVD} itself does not provide direct remediation recommendations, i
 \subsection{GitHub Advisory Database}
 \label{subsec:github-advisory-database}
 
-The \ac{GAD} is an extensive resource for tracking security vulnerabilities in open-source projects, compiled from multiple sources, including advisories reported directly on GitHub and contributions from external databases such as the \ac{NVD}, npm Security Advisories \footnote{\url{https://www.npmjs.com/search?q=advisories}}, and language-specific sources like RustSec \footnote{\url{https://rustsec.org/}}. Each advisory undergoes classification and may be grouped as GitHub-reviewed, unreviewed, or malware-related, thus providing users with clear distinctions regarding the trustworthiness and origin of the data.
+The \ac{GAD} is an extensive resource for tracking security vulnerabilities in open-source projects, compiled from multiple sources, including advisories - official notifications about security vulnerabilities or malicious software, providing details on affected packages, versions, and potential mitigation measures \footnote{\url{https://github.com/github/advisory-database}} - reported directly on GitHub and contributions from external databases such as the \ac{NVD}, npm Security Advisories \footnote{\url{https://www.npmjs.com/search?q=advisories}}, and language-specific sources like RustSec \footnote{\url{https://rustsec.org/}}. Each advisory undergoes classification and may be grouped as GitHub-reviewed, unreviewed, or malware-related, thus providing users with clear distinctions regarding the trustworthiness and origin of the data.
 
 Each advisory in the \ac{GAD} is uniquely identified by a \ac{GHSA}, such as \texttt{GHSA-xxxx-yyyy-zzzz}. The \ac{GHSA} ensures that advisories are uniquely referenced within the GitHub ecosystem, providing a consistent mechanism for identifying and addressing vulnerabilities reported by maintainers or the GitHub community \footnote{\url{https://github.com/github/advisory-database}}.
 
@@ -192,7 +189,7 @@ Advisories within the database are standardized using the \ac{OSV} format, which
 
 In addition to verified security advisories, GitHub includes unreviewed advisories imported directly from the \ac{NVD}, allowing users to access a broader scope of known vulnerabilities. Notably, malware advisories, exclusive to the npm ecosystem, inform users about intentionally malicious code packages, typically linked to substitution attacks. While GitHub doesn’t directly verify these malware reports, their inclusion in the advisory database helps security teams identify and remove such threats.
 
-By integrating advisories from a range of ecosystems — including popular package registries — the GitHub Advisory Database serves as a centralized, reliable source for open-source vulnerability management \autocite{github_inc_about_2024}.
+By integrating advisories from a range of ecosystems  -  including popular package registries  -  the GitHub Advisory Database serves as a centralized, reliable source for open-source vulnerability management \autocite{github_inc_about_2024}.
 
 
 \subsection{FIRST.org EPSS Database and API}
@@ -234,9 +231,9 @@ The visualized distribution highlights the role of \ac{EPSS} in guiding remediat
 \subsection{Other Vulnerability Databases}
 \label{subsec:other-vulnerability-databases}
 
-While databases such as the \ac{DST} \footnote{\url{https://security-tracker.debian.org/tracker/}} and the \ac{RHD} \footnote{\url{https://access.redhat.com/security/security-updates/cve}} also offer valuable insights for vulnerability management, they are not examined in detail in this study due to their limited scope and specific focus on particular software ecosystems. These databases primarily target vulnerabilities within their respective platforms — Debian-based and Red Hat systems — which can limit their general applicability across a wider range of software environments. Additionally, the primary focus of this work is on vulnerability databases that provide broader, cross-platform coverage and have higher adoption rates across diverse development ecosystems. As such, databases like the \ac{NVD}, \ac{OSV}, and \ac{GAD} were selected for their comprehensive, ecosystem-agnostic data, which is critical for a generalized approach to vulnerability classification and remediation across open-source and proprietary software landscapes.
+While databases such as the \ac{DST} \footnote{\url{https://security-tracker.debian.org/tracker/}} and the \ac{RHD} \footnote{\url{https://access.redhat.com/security/security-updates/cve}} also offer valuable insights for vulnerability management, they are not examined in detail in this thesis due to their limited scope and specific focus on particular software ecosystems. These databases primarily target vulnerabilities within their respective platforms  -  Debian-based and Red Hat systems  -  which can limit their general applicability across a wider range of software environments. The primary focus of this work is on vulnerability databases that provide broader, cross-platform coverage and have higher adoption rates across diverse development ecosystems. As such, databases like the \ac{NVD}, \ac{OSV}, and \ac{GAD} were selected for their comprehensive, ecosystem-agnostic data, which is critical for a generalized approach to vulnerability classification and remediation across open-source and proprietary software landscapes.
 
 \section{Limitations in Vulnerability Classification and Remediation}
 \label{sec:limitations-vulnerability}
 
-Overall, the analyzed vulnerability classification models and tools demonstrate a wide range of approaches for identifying, assessing, and prioritizing security vulnerabilities. Frameworks such as \ac{CVSS} and \ac{EPSS} offer valuable structural and data-driven evaluations, while specialized models like \ac{SSVC} provide context-specific and stakeholder-focused perspectives. The examined vulnerability databases, including \ac{NVD}, \ac{OSV}, and \ac{GAD}, supply essential information foundations crucial for comprehensive risk analysis. However relying solely on the unidimensional \ac{CVSS}, as currently implemented in \ac{VA}, can lead to inaccurate prioritizations and impede effective vulnerability remediation. Multidimensional models, such as those employed by \ac{R7IVM} and \ac{TVM}, utilize multiple factors — including exploitability, threat intelligence, asset criticality, and contextual business impacts — to complement the \ac{CVSS}. By integrating additional dimensions, these models enhance the accuracy and relevance of vulnerability prioritization, ensuring that resources are allocated to the most critical and exploitable vulnerabilities. These insights underscore the necessity for a multidimensional classification model that amalgamates the strengths of current systems while mitigating their weaknesses. By developing such a model, the functionality of \ac{VA} can be substantially enhanced, enabling a more precise and holistic evaluation and prioritization of vulnerabilities in software projects.
+Overall, the analyzed vulnerability classification models and tools demonstrate a wide range of approaches for identifying, assessing, and prioritizing security vulnerabilities. Frameworks such as \ac{CVSS} and \ac{EPSS} offer valuable structural and data-driven evaluations, while specialized models like \ac{SSVC} provide context-specific and stakeholder-focused perspectives. The examined vulnerability databases, including \ac{NVD}, \ac{OSV}, and \ac{GAD}, supply essential information foundations crucial for comprehensive risk analysis. However relying solely on the unidimensional \ac{CVSS}, as currently implemented in \ac{SCA} tools vulnerability management system, can lead to inaccurate prioritizations and impede effective vulnerability remediation. Multidimensional models, such as those employed by \ac{R7IVM} and \ac{TVM}, utilize multiple factors  -  including exploitability, threat intelligence, asset criticality, and contextual business impacts  -  to complement the \ac{CVSS}. By integrating additional dimensions, these models enhance the accuracy and relevance of vulnerability prioritization, ensuring that resources are allocated to the most critical and exploitable vulnerabilities. These insights underscore the necessity for a multidimensional classification model that amalgamates the strengths of current systems while mitigating their weaknesses. By developing such a model, the functionality of \ac{VA} can be substantially enhanced, enabling a more precise and holistic evaluation and prioritization of vulnerabilities in software projects.
