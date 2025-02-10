@@ -126,16 +126,16 @@ This section presents well-known tools for vulnerability detection, assessment, 
 \subsection{Tenable Vulnerability Management}
 \label{subsec:tenable-vulnerability-management}
 
-\ac{TVM} enhances traditional vulnerability assessment by integrating \ac{CVSS} with its proprietary \ac{VPR}. While \ac{CVSS} provides a standardized method for evaluating technical severity, it lacks consideration of contextual factors and real-world exploitability \autocite{spring_time_2021}. Tenable's \ac{VPR} addresses these limitations by dynamically adjusting scores based on exploit availability, threat intelligence and asset criticality.
+\ac{TVM} enhances traditional vulnerability assessment by integrating \ac{CVSS} with its proprietary \ac{VPR}. While \ac{CVSS} provides a standardized method for evaluating technical severity, it lacks consideration of contextual factors and real-world exploitability \autocite{spring_time_2021}. Tenable's \ac{VPR} addresses these limitations by dynamically adjusting scores based on exploit availability, threat intelligence and asset criticality. The VPR provides a single score on a scale from 0.1 to 10.0, with higher values representing a higher likelihood of exploit.
 
-Leveraging its assessments from both \ac{CVSS} and \ac{VPR}, \ac{TVM} offers actionable remediation recommendations tailored to an organization's specific risk profile. Remediation strategies are drawn from different sources like the \ac{GAD} \footnote{\url{https://github.com/advisories}} and the \ac{NVD} \footnote{\url{https://nvd.nist.gov/}} \autocite{tenable_inc_vulnerability_2024}. By incorporating key drivers such as vulnerability age, exploit code maturity, and threat intelligence, \ac{TVM} ensures vulnerabilities are prioritized based on both technical severity and real-world exploitability. This multidimensional approach allows organizations to address the most critical issues first, ensuring a focus on vulnerabilities that pose the greatest immediate threat.
+Leveraging its assessments from both \ac{CVSS} and \ac{VPR}, \ac{TVM} offers actionable remediation recommendations tailored to an organization's specific risk profile. Remediation strategies are drawn from different sources like the \ac{GAD} \footnote{\url{https://github.com/advisories}} and the \ac{NVD} \footnote{\url{https://nvd.nist.gov/}} \autocite{tenable_inc_vulnerability_2024}. By incorporating key drivers such as vulnerability age, exploit code maturity, threat intelligence, and technical impact (based on \ac{CVSS}), \ac{TVM} ensures vulnerabilities are prioritized based on both technical severity and real-world exploitability. This multidimensional approach allows organizations to address the most critical issues first, ensuring a focus on vulnerabilities that pose the greatest immediate threat.
 
 By utilizing proprietary insights and contextual data, the platform guides security teams to mitigate vulnerabilities that are most likely to be exploited, enhancing overall security posture \autocite{tenable_inc_tenable_2024}.
 
 \subsection{Rapid7 InsightVM}
 \label{subsec:rapid7-insightvm}
 
-Like \ac{TVM}, \ac{R7IVM} addresses the limitations of \ac{CVSS} with its proprietary solution, the \ac{RRS}. The \ac{RRS} augments \ac{CVSS} by introducing a multidimensional approach that incorporates real-time data from various sources. These dimensions include exploitability, exposure, active threat intelligence, and business impact, which together provide a more dynamic and comprehensive vulnerability assessment.
+Like \ac{TVM}, \ac{R7IVM} addresses the limitations of \ac{CVSS} with its proprietary solution, the \ac{RRS}. The \ac{RRS} augments \ac{CVSS} by introducing a multidimensional approach that incorporates real-time data from various sources. These dimensions include among other things the \ac{CVSS}, exploitability, exposure, active threat intelligence, and business impact, which together provide a more dynamic and comprehensive vulnerability assessment. The \ac{RRS} consolidates these factors into a single score ranging from 1 to 1000, with higher scores indicating higher risk.
 
 The dimension of exploitability is supported by data from the Heisenberg honeypot framework \footnote{\url{https://information.rapid7.com/project-heisenberg-cloud.html?CS=blog}}, which simulates vulnerable systems and captures attack methodologies. This framework allows the \ac{RRS} to include real-time exploit data, focusing on vulnerabilities actively targeted by attackers. In addition, incident reports from Rapid7's Managed Detection and Response team provide confirmed exploitation activity, ensuring that vulnerabilities being targeted in live attacks are prioritized.
 
@@ -143,12 +143,12 @@ The exposure dimension evaluates how accessible a vulnerability is, particularly
 
 Another key dimension is business impact, which is determined through a tagging system within InsightVM. This allows organizations to adjust the prioritization of vulnerabilities based on the criticality of the affected assets, such as systems that host sensitive data.
 
-In terms of remediation, InsightVM integrates automated workflows to facilitate the resolution of vulnerabilities. Through built-in connections, it can integrate with ticketing systems such as Jira \footnote{\url{https://www.atlassian.com/de/software/jira}} and ServiceNow \footnote{\url{https://www.servicenow.com/}}, enabling automated ticket creation and management. These tickets can be directly assigned to remediation teams for manual resolution. The integration also supports bi-directional synchronization, ensuring that updates in ServiceNow are reflected in InsightVM and vice versa \autocite{rapid7_live_2017}.
+In terms of remediation, InsightVM integrates automated workflows to facilitate the resolution of vulnerabilities. Through built-in connections, it can integrate with ticketing systems such as Jira \footnote{\url{https://www.atlassian.com/de/software/jira}} and ServiceNow \footnote{\url{https://www.servicenow.com/}}, enabling automated ticket creation and management. These tickets can be directly assigned to remediation teams for manual resolution. The integration also supports bi-directional synchronization, ensuring that updates in ServiceNow are reflected in InsightVM and vice versa \autocite{rapid7_live_2017, rapid7_director_2020}.
 
 \subsection{Snyk}
 \label{subsec:snyk}
 
-Snyk is a platform for vulnerability detection and remediation that employs a multidimensional approach. In addition to traditional vulnerability detection, Snyk monitors multiple vulnerability databases, such as \ac{CVE}s from the \ac{NVD} and others, to ensure comprehensive coverage of known vulnerabilities. Snyk also tracks user activity on GitHub, including issues, pull requests, and commit messages that may indicate the presence of a security flaw. This is complemented by tools that identify recurring security patterns across open-source packages, as well as manual audits conducted by the Snyk Security team to scrutinize widely used packages for vulnerabilities \autocite{snyk_snyk_2024}.
+Snyk is a platform for vulnerability detection and remediation that employs a multidimensional approach. In addition to traditional vulnerability detection, Snyk monitors multiple vulnerability databases, such as \ac{CVE}s from the \ac{NVD} and others, to ensure comprehensive coverage of known vulnerabilities. Snyk also tracks user activity on GitHub, including issues, pull requests, and commit messages that may indicate the presence of a security flaw. This is complemented by tools that identify recurring security patterns across open-source packages, as well as manual audits conducted by the Snyk Security team to scrutinize widely used packages for vulnerabilities. To facilitate prioritization, Snyk provides two types of scores: a Priority Score (1-1000) for all Snyk products, and a Risk Score (1-1000) for Snyk Open Source \footnote{\url{https://docs.snyk.io/scan-with-snyk/snyk-open-source}} and Snyk Container \footnote{\url{https://docs.snyk.io/scan-with-snyk/snyk-container}} \autocite{snyk_limited_priority_2024, snyk_limited_risk_2024}.
 
 Furthermore, Snyk’s proprietary vulnerability database enriches these public sources by adding vulnerabilities that may not yet be publicly disclosed, allowing for early detection of security issues. This combination of multiple data sources enhances the breadth and depth of Snyk’s detection capabilities \autocite{snyk_snyk_2024-1}.
 
@@ -204,8 +204,8 @@ Unlike the theoretical foundation of \ac{EPSS} discussed earlier (see section \r
 \begin{itemize}
     \item \textbf{Vendor Information}: Extracted from the CPE (Common Platform Enumeration) \footnote{\url{https://nvd.nist.gov/products/cpe}} via the \ac{NVD}.
     \item \textbf{Vulnerability Age}: Measured in days since the \ac{CVE} was published in the MITRE \ac{CVE} list \footnote{\url{https://cve.mitre.org/cve/search_cve_list.html}}.
-    \item \textbf{References with Categorical Labels}: Links to sources such as the MITRE CVE List and \ac{NVD}, which categorize the content of each reference.
-    \item \textbf{Normalized Multiword Expressions}: Extracted from the vulnerability descriptions in the MITRE CVE List to enhance semantic analysis.
+    \item \textbf{References with Categorical Labels}: Links to sources such as the MITRE \ac{CVE} List and \ac{NVD}, which categorize the content of each reference.
+    \item \textbf{Normalized Multiword Expressions}: Extracted from the vulnerability descriptions in the MITRE \ac{CVE} List to enhance semantic analysis.
     \item \textbf{Weakness Information}: Collected from \ac{CWE} identifiers via the \ac{NVD}.
     \item \textbf{\ac{CVSS} Metrics}: Includes the base vector from CVSS 3.x, obtained via the \ac{NVD}.
     \item \textbf{\ac{CVE} Presence on Public Lists}: Information about whether a \ac{CVE} is listed on notable platforms, such as CISA KEV \footnote{\url{https://www.cisa.gov/known-exploited-vulnerabilities-catalog}}, Google Project Zero \footnote{\url{https://googleprojectzero.blogspot.com/}}, or Trend Micro's Zero Day Initiative (ZDI) \footnote{\url{https://www.zerodayinitiative.com/}}, among others.
@@ -213,7 +213,7 @@ Unlike the theoretical foundation of \ac{EPSS} discussed earlier (see section \r
     \item \textbf{Offensive Security Tools and Scanners}: Integration with tools such as Intrigue \footnote{\url{https://core.intrigue.io/}} and sn1per \footnote{\url{https://sn1persecurity.com/wordpress/}}, to identify exploit capabilities.
 \end{itemize}
 
-Another aspect of EPSS is the collection of timing information. It is not sufficient to know that a Metasploit module exists for a particular \ac{CVE}; the database tracks when the module was added. This enables the correlation of exploitation activity in the wild before and after the module's introduction. This attention to timing applies to all data sources, ensuring that the evolving threat landscape is  reflected in \ac{EPSS} predictions \autocite{first_epss_2024}.
+Another aspect of \ac{EPSS} is the collection of timing information. It is not sufficient to know that a Metasploit module exists for a particular \ac{CVE}; the database tracks when the module was added. This enables the correlation of exploitation activity in the wild before and after the module's introduction. This attention to timing applies to all data sources, ensuring that the evolving threat landscape is  reflected in \ac{EPSS} predictions \autocite{first_epss_2024}.
 
 To better understand the distribution of EPSS probabilities across known \ac{CVE}s, figure~\ref{fig:epss-distribution} shows a histogram based on the EPSS data as of 2022-03-04. The majority of \ac{CVE}s have a very low exploitation probability, with most values concentrated near 0\%. This indicates that while a large number of vulnerabilities exist, only a small fraction are likely to be exploited in the wild.
 
@@ -222,7 +222,7 @@ However, as shown in the tail of the distribution, a subset of vulnerabilities h
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{resources/EPSS_Prob_Dist.png}
-    \caption{Distribution of EPSS probabilities as of 2022-03-04. This histogram illustrates the likelihood of exploitation for different \ac{CVE}s, showing that the majority of vulnerabilities have a low exploitation probability \autocite{first_exploit_2022}.}
+    \caption{Distribution of \ac{EPSS} probabilities as of 2022-03-04. This histogram illustrates the likelihood of exploitation for different \ac{CVE}s, showing that the majority of vulnerabilities have a low exploitation probability \autocite{first_exploit_2022}.}
     \label{fig:epss-distribution}
 \end{figure}
 
@@ -231,9 +231,84 @@ The visualized distribution highlights the role of \ac{EPSS} in guiding remediat
 \subsection{Other Vulnerability Databases}
 \label{subsec:other-vulnerability-databases}
 
-While databases such as the \ac{DST} \footnote{\url{https://security-tracker.debian.org/tracker/}} and the \ac{RHD} \footnote{\url{https://access.redhat.com/security/security-updates/cve}} also offer valuable insights for vulnerability management, they are not examined in detail in this thesis due to their limited scope and specific focus on particular software ecosystems. These databases primarily target vulnerabilities within their respective platforms  -  Debian-based and Red Hat systems  -  which can limit their general applicability across a wider range of software environments. The primary focus of this work is on vulnerability databases that provide broader, cross-platform coverage and have higher adoption rates across diverse development ecosystems. As such, databases like the \ac{NVD}, \ac{OSV}, and \ac{GAD} were selected for their comprehensive, ecosystem-agnostic data, which is critical for a generalized approach to vulnerability classification and remediation across open-source and proprietary software landscapes.
+While databases such as the \ac{DST} \footnote{\url{https://security-tracker.debian.org/tracker/}} and the \ac{RHD} \footnote{\url{https://access.redhat.com/security/security-updates/cve}} also offer valuable insights for vulnerability management, they are not examined in detail in this thesis due to their limited scope and specific focus on particular software ecosystems. These databases primarily target vulnerabilities within their respective platforms  -  Debian-based and Red Hat systems  -  which can limit their general applicability across a wider range of software environments. The primary focus of this work is on vulnerability databases that provide broader, cross-platform coverage and have higher adoption rates across diverse development ecosystems. As such, databases like the \ac{NVD}, \ac{OSV}, and \ac{GAD} were selected for their comprehensive, ecosystem-agnostic data.
 
-\section{Limitations in Vulnerability Classification and Remediation}
-\label{sec:limitations-vulnerability}
+\section{Lessons Learned from Existing Tools and \\ Their Impact on the Proposed Approach}
+\label{sec:lessons-from-tools}
 
-Overall, the analyzed vulnerability classification models and tools demonstrate a wide range of approaches for identifying, assessing, and prioritizing security vulnerabilities. Frameworks such as \ac{CVSS} and \ac{EPSS} offer valuable structural and data-driven evaluations, while specialized models like \ac{SSVC} provide context-specific and stakeholder-focused perspectives. The examined vulnerability databases, including \ac{NVD}, \ac{OSV}, and \ac{GAD}, supply essential information foundations crucial for comprehensive risk analysis. However relying solely on the unidimensional \ac{CVSS}, as currently implemented in \ac{SCA} tools vulnerability management system, can lead to inaccurate prioritizations and impede effective vulnerability remediation. Multidimensional models, such as those employed by \ac{R7IVM} and \ac{TVM}, utilize multiple factors  -  including exploitability, threat intelligence, asset criticality, and contextual business impacts  -  to complement the \ac{CVSS}. By integrating additional dimensions, these models enhance the accuracy and relevance of vulnerability prioritization, ensuring that resources are allocated to the most critical and exploitable vulnerabilities. These insights underscore the necessity for a multidimensional classification model that amalgamates the strengths of current systems while mitigating their weaknesses. By developing such a model, the functionality of \ac{VA} can be substantially enhanced, enabling a more precise and holistic evaluation and prioritization of vulnerabilities in software projects.
+The literature review of current vulnerability management tools (refer to section~\ref{sec:multidimensional-approaches-tools}) shows that leading solutions adopt a multidimensional approach to vulnerability detection, assessment, and remediation. This summary consolidates the scoring factors employed by Tenable Vulnerability Management, Rapid7 InsightVM, and Snyk into a single overview, followed by a brief conclusion on how these insights inform the proposed approach.
+
+\subsection*{Consolidated Scoring Factors}
+\begin{itemize}
+    \item \textbf{Technical Severity (\ac{CVSS})}
+    \begin{itemize}
+        \item Serves as a baseline for gauging technical impact across all three tools
+        \item Tenable refines it with additional context (described in section~\ref{subsec:tenable-vulnerability-management})
+        \item Rapid7 leverages it alongside other dimensions (highlighted in section~\ref{subsec:rapid7-insightvm})
+        \item Snyk also applies it as a foundational metric (detailed in section~\ref{subsec:snyk})
+    \end{itemize}
+    
+    \item \textbf{Exploit Availability \& Exploit Maturity}
+    \begin{itemize}
+        \item Tenable’s \ac{VPR} incorporates real-world exploit potential (presented in section~\ref{subsec:tenable-vulnerability-management})
+        \item Rapid7 collects active attack data via honeypots (mentioned in section~\ref{subsec:rapid7-insightvm})
+        \item Snyk tracks how advanced or readily available an exploit is (outlined in section~\ref{subsec:snyk})
+    \end{itemize}
+    
+    \item \textbf{Threat Intelligence}
+    \begin{itemize}
+        \item Tenable evaluates various threat data sources (see section~\ref{subsec:tenable-vulnerability-management})
+        \item Rapid7 integrates intelligence from partners such as the FBI (noted in section~\ref{subsec:rapid7-insightvm})
+    \end{itemize}
+    
+    \item \textbf{Business Context \& Asset Criticality}
+    \begin{itemize}
+        \item Tenable factors in the criticality of an asset to an organization (elaborated in section~\ref{subsec:tenable-vulnerability-management})
+        \item Rapid7 uses asset tagging to assess business impact (discussed in section~\ref{subsec:rapid7-insightvm})
+    \end{itemize}
+    
+    \item \textbf{Exposure}
+    \begin{itemize}
+        \item Rapid7 assesses whether a system is internet-facing or publicly accessible (highlighted in section~\ref{subsec:rapid7-insightvm})
+    \end{itemize}
+    
+    \item \textbf{Additional Data Sources}
+    \begin{itemize}
+        \item Snyk leverages both public (\ac{NVD}, \ac{CVE}) and proprietary databases, as well as GitHub activities (detailed in section~\ref{subsec:snyk})
+        \item Tenable supplements \ac{CVSS} with internal data repositories (presented in section~\ref{subsec:tenable-vulnerability-management})
+    \end{itemize}
+    
+    \item \textbf{Fix Availability \& Vulnerability Age}
+    \begin{itemize}
+        \item Snyk evaluates whether patches or remediation paths exist (mentioned in section~\ref{subsec:snyk})
+        \item Tenable considers the duration for which a vulnerability has been publicly known (described in section~\ref{subsec:tenable-vulnerability-management})
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Summary and Impact on the Proposed Approach}
+Insights from Tenable, Rapid7, and Snyk highlight the need for a multidimensional approach to vulnerability management—one that integrates both technical severity and real-world exploit likelihood. In response, this thesis proposes a methodology that merges the quantitative assessment of \ac{CVSS} with the probabilistic modeling of \ac{EPSS} into a unified scoring system. This hybrid model draws on multiple data sources, including vendor intelligence, threat intelligence, vulnerability age, and public exploit presence, ensuring a more context-aware prioritization strategy.
+
+By combining these metrics, a more effective remediation framework emerges: while \ac{CVSS} quantifies the \emph{impact} of a vulnerability (i.e., its potential severity if exploited), \ac{EPSS} estimates the \emph{likelihood} of actual exploitation based on real-world data. This integration enables more precise prioritization—vulnerabilities with both high impact and a high probability of exploitation should be addressed first, whereas those with a high \ac{CVSS} score but low \ac{EPSS} value may be deprioritized. Studies (e.g., \autocite{jacobs_exploit_2021, first_epss_2021}) confirm that incorporating threat-likelihood metrics alongside \ac{CVSS} enhances remediation efficiency by reducing patch workloads while still mitigating the most actively exploited vulnerabilities.
+
+Figure~\ref{fig:epss_cvss_compare} illustrates how these two metrics intersect to guide a more comprehensive, risk-based remediation strategy.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{resources/EPSS_CVSS_Compare.png}
+    \caption[\ac{EPSS} and \ac{CVSS} Comparison]{Illustration of how \ac{EPSS} probabilities and \ac{CVSS} severity scores complement each other for better risk-based prioritization \autocite{first_epss_2021}.}
+    \label{fig:epss_cvss_compare}
+\end{figure}
+
+To retrieve the \ac{CVSS} and \ac{EPSS} scores, the databases outlined in section~\ref{sec:vulnerability-databases-resources} will be utilized:
+
+\begin{itemize}
+    \item The \ac{GAD} (see section~\ref{subsec:github-advisory-database}) serves as the primary source for identifying the \ac{CVE} identifier associated with a given vulnerability.
+    \item The \ac{OSV} (detailed in section~\ref{subsec:open-source-vulnerabilities}) and the \ac{NVD} (outlined in section~\ref{subsec:national-vulnerability-database}) provide \ac{CVSS} scores for a given \ac{CVE} identifier.
+    \item The FIRST.org \ac{EPSS} Database is employed to retrieve the \ac{EPSS} score corresponding to a specific \ac{CVE} identifier.
+\end{itemize}
+
+After establishing this combined severity score, the thesis applies a decision tree for remediation planning, drawing on the \ac{SSVC} framework. This tree incorporates \emph{Vulnerability Classification}, \emph{Patch Availability}, \emph{System Usage} (public or internal), \emph{Asset Criticality}, \emph{Fix Complexity}, \emph{Personal Code Ownership}, \emph{Exploit Likelihood}, \emph{Observed Exploits}, \emph{Compliance Requirement}, and \emph{Business Impact}. The required input data for these parameters is collected through a user query in the frontend, ensuring that context-specific factors are considered in the decision-making process. By blending a robust quantitative metric with a well-defined remediation process, the proposed framework addresses all of the key data considerations employed by Tenable, Rapid7, and Snyk—ensuring precise prioritization and more informed remediation strategies for critical vulnerabilities.
+
+
+
+
