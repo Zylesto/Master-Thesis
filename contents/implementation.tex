@@ -11,71 +11,110 @@ This section explains the main backend building blocks, focusing on data storage
 \subsection{Caching Mechanism and Repository Layer}
 \label{subsec:caching-repository}
 
-A central piece of functionality is the storage of previously retrieved data and timestamps. Two core strategies are typically employed to manage cached data. The first strategy, referred to as \textbf{Pre-Check}, involves performing a lookup in an internal repository each time a request for a vulnerability arises. This process determines whether the relevant attributes, such as \ac{CVE}, \ac{CVSS} vector, or \ac{CVSS} score, are already present in the cache. 
+A central piece of functionality is the storage of previously retrieved data. Two core strategies are employed to manage data retrieval: \textbf{Pre-Check} and \textbf{Scheduled Refresh}.
 
-The second strategy, known as \textbf{Time-Based Invalidations}, ensures that cached data remains relevant by invalidating entries if the stored timestamp exceeds a predefined threshold, such as three days. In cases where entries are deemed invalid, the system first consults \ac{OSV} entries stored in a local database, which are updated daily (see section \ref{sec:current-architecture}). Only if the desired information is not found in the local database or \ac{OSV} data, the system makes external API calls to retrieve and refresh the stale data. This approach strikes a balance between maintaining data freshness and minimizing unnecessary network activity.
+The \textbf{Pre-Check} strategy involves querying the internal repository whenever a vulnerability request arises. The system first checks whether a corresponding \textit{Vulnerability Data Entity} already exists. If it does, the existing record is returned. If no such entry is found, the system creates a new entity while simultaneously checking the local \ac{OSV} database for the associated \ac{CVSS} vector. If the vector is not available locally, an external \ac{API} call to the \ac{NVD} is performed to retrieve the missing details. In parallel, the \ac{EPSS} score is fetched from the external \texttt{first.org} \ac{API}, as it is not stored locally (see section~\ref{subsec:backend-responsibilities}).
 
-\newpage
+The \textbf{Scheduled Refresh} strategy ensures data freshness through a nightly update cycle. This process starts 30 minutes after the \ac{OSV} database update (see section ~\ref{sec:current-architecture}), ensuring that the most recent vulnerability information is available. During this cycle, the system updates the entire dataset by performing batch requests for \ac{EPSS} scores via the \textit{first.org} \ac{API} and individual requests to the \ac{NVD} for missing \ac{CVSS} details not available in the local \ac{OSV} database, as the \ac{NVD} does not support batch queries for \ac{CVE} IDs \footnote{\url{https://nvd.nist.gov/developers/vulnerabilities}}.
+
+If either the \ac{CVSS} or \ac{EPSS} data cannot be retrieved, the system transitions to an \texttt{Error} state, returning a severity score of 10.1. This value is highlighted in pink on the frontend to prompt user action (see section~\ref{subsec:handling-missing-data}).
 
 \noindent
-\paragraph{Example of a Caching Strategy}
+\paragraph{Example of a Caching Strategy (Pseudocode)}
 \label{par:example-caching-strategy}
 
 \begin{verbatim}
-if (cachedEntry != null && cachedEntry.getLastUpdated().
-    isAfter(now.minusDays(3))) {
-    // Use cached data
-} else {
-    // Trigger update mechanism
+// Caching Strategy Pseudocode
+
+// Check if vulnerability exists
+if (existsInRepository(cveId)) {
+    return getFromRepository(cveId);
 }
+
+// Create new entity and fetch data
+entity = createNewEntity(cveId);
+entity.cvssVector = getFromOsv(cveId) ?? fetchFromNvd(cveId);
+entity.epssScore  = fetchFromFirstOrg(cveId);
+
+// Save and return entity
+saveToRepository(entity);
+return entity;
 \end{verbatim}
 
-\subsection{Data Acquisition}
-\label{subsec:data-acquisition}
+\noindent
+If any data retrieval fails, the process is aborted, and the system proceeds as described in section~\ref{subsec:handling-missing-data}.
 
-Whenever data is missing or outdated, the system queries multiple external endpoints as part of the data acquisition workflow. This workflow builds upon the system interaction workflow outlined in section \ref{subsec:system-interaction}, ensuring seamless integration with external APIs and consistent data freshness. Before any external \texttt{fetch} is issued, the \ac{OSV}-first approach ensures that existing \ac{OSV} data has precedence. The following external sources are contacted only if no matching data is found in the \ac{OSV} repository:
 
+\subsection{Scheduled Refresh Mechanism}
+\label{subsec:scheduled-refresh}
+
+The \textbf{Scheduled Refresh} strategy ensures data freshness through a nightly update cycle. This process starts 30 minutes after the \ac{OSV} database update, ensuring that the most recent vulnerability information is available.
+
+During this cycle, the system iterates through all existing \textit{Vulnerability Data Entities} and updates each entry as follows:
 \begin{itemize}
-    \item \textbf{The \ac{GAD} (for \ac{CVE} Resolution):} This database is queried to determine if a \ac{GHSA} maps to a known \ac{CVE}. If no \ac{CVE} is found, the system assigns \texttt{null} as a fallback value.
-    \item \textbf{The \ac{NVD} (for \ac{CVSS} Details):} This database provides the \ac{CVSS} base score and vector. If the required information is unavailable, the system assigns \texttt{null}.
-    \item \textbf{The first.org database (for \ac{EPSS}):} This database is queried to retrieve the current Exploit Probability Score. If the query fails, the system logs an error and sets the \ac{EPSS} field to \texttt{null}.
+    \item The local \ac{OSV} database is queried for the latest \ac{CVSS} vector.
+    \item If the vector is not found locally, an external \ac{API} call is made to the \ac{NVD}.
+    \item In parallel, the \ac{EPSS} scores are fetched in a batch from the external \texttt{first.org} \ac{API}, as it is not cached locally.
 \end{itemize}
 
+If any data retrieval fails, the system aborts the update for the affected entry and proceeds as described in section~\ref{subsec:handling-missing-data}. Successfully updated entities are saved back to the repository, ensuring the dataset remains accurate and current.
+
 \noindent
-\paragraph{Pseudocode for a Fetch-Only-if-Missing Approach}
-\label{par:fetch-missing-pseudocode}
+\paragraph{Daily Vulnerability-Data Update (Pseudocode)}
+\label{par:daily-vulnerability-update-short}
 
 \begin{verbatim}
-// Attempt to retrieve local data (including OSV info)
-VulnerabilityDataEntity data = repository.findById(ghsaId);
-if (data == null || data.isStale()) {
-    // Attempt external fetch only if OSV data is also not available
-    data = fetchFromExternalSource(ghsaId);
-    // Save or update local data
-    repository.save(data);
+// Scheduled job: runs daily at 00:30
+scheduleRecurringTask("vulnerability-data-update", "0 30 0 * * *") {
+    updateVulnerabilityData();
 }
-return data;
 
+function updateVulnerabilityData() {
+    // Fetch all vulnerabilities
+    entities = vulnerabilityDataRepository.findAll();
+
+    // Batch-fetch EPSS scores
+    epssScores = fetchBatchEpssScores(collectCveIds(entities));
+
+    // Update each entity
+    for each entity in entities {
+        entity.epssScore  = epssScores.get(entity.cveId);
+        [entity.cvssScore, entity.cvssVector] =
+        fetchCvssScoreAndVector(
+            entity.cveId,
+            entity.vulnId
+    );
+        entity.severityScore = calculateSeverityScore(entity);
+        entity.severityScoreLastUpdated = now();
+
+        // Save updated entity
+        vulnerabilityDataRepository.save(entity);
+    }
+}
 \end{verbatim}
 
 \paragraph{SSVC Recommendation Endpoint}
 \label{par:ssvc-recommendation-endpoint}
 
-The \ac{SSVC} recommendation endpoint, part of the controller layer, allows the frontend to submit tailored remediation plans. As described in section \ref{subsec:ssvc-process}, this endpoint integrates role-specific decisions into the backend’s controller layer. These recommendations are stored in the backend for integration with other vulnerability metrics. The implementation is as follows:
+The \ac{SSVC} recommendation endpoint, part of the controller layer, allows the frontend to submit tailored remediation plans. As described in section \ref{subsec:ssvc-process}, this endpoint integrates role-specific decisions into the backend’s controller layer. These recommendations are stored in the backend for integration with other vulnerability metrics. The pseudo-implementation is as follows:
+
+\noindent
+\paragraph{Updating SSVC Recommendation (Pseudocode)}
+\label{par:update-ssvc-recommendation}
 
 \begin{verbatim}
-@PostMapping("/api/.../vulnerabilities/{vulnId}/ssvc")
-public ResponseEntity<Void> updateSsvc(
-    @PathVariable UUID vulnId,
-    @RequestBody String ssvcRecommendation
-) {
-    VulnerabilityDataEntity data = repository.findById(vulnId);
-    if (data != null) {
-        data.setSsvcRecommendation(ssvcRecommendation);
-        repository.save(data);
-    }
-    return ResponseEntity.ok().build();
-}
+// For a POST request to "/api/.../vulnerabilities/{vulnId}/ssvc"
+function updateSsvc(vulnId, ssvcRecommendation):
+    // Retrieve the vulnerability record by its ID
+    data = repository.findById(vulnId)
+    
+    // If found, update recommendation and save
+    if data:
+        data.ssvcRecommendation = ssvcRecommendation
+        repository.save(data)
+    
+    // Return success response
+    return HTTP_200_OK
 \end{verbatim}
 
 This process ensures that:
@@ -106,21 +145,25 @@ severity = round(severity);
 \paragraph{Example of Combining \ac{CVSS} and \ac{EPSS}}
 \label{par:cvss-epss-combination}
 The following example demonstrates how \ac{CVSS} and \ac{EPSS} scores are combined to compute the severity score, aligning with the weighted scoring formula presented in section \ref{sec:algorithm-classifications}:
+\noindent
+\paragraph{Severity Score Calculation (Pseudocode)}
+\label{par:severity-score-calculation}
+
 \begin{verbatim}
-public static double calculateSeverityScore(VulnerabilityDataEntity data) {
-    Double cvss = data.getCvssScore();       // range in between 0.0–10.0
-    Double epss = data.getEpssScore();       // range in between 0.0–1.0
+// Calculate severity score based on CVSS and EPSS
+function calculateSeverityScore(data):
+    cvss = data.getCvssScore()  // 0.0 to 10.0
+    epss = data.getEpssScore()  // 0.0 to 1.0
 
-    if (cvss == null || epss == null) {
-        logger.error("CVSS or EPSS missing. Cannot compute severity score.");
-        return 10.1;
-    }
+    if cvss is null or epss is null:
+        return 10.1  // Error score if data is missing
 
-    double epssScaled = epss * 10.0;
-    double finalScore = (cvss + epssScaled) / 2.0;
-    return Math.round(finalScore);
-}
+    // Scale EPSS and calculate average
+    finalScore = (cvss + (epss * 10.0)) / 2.0
+
+    return round(finalScore)
 \end{verbatim}
+
 
 \section{Frontend Components}
 \label{sec:frontend-components}

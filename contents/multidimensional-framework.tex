@@ -23,11 +23,9 @@ The following multi-dimensional classification model integrates several key dime
     \item \ac{EPSS} Score: Represents the likelihood of real-world exploitation, based on empirical threat intelligence, such as publicly available exploits and observed attack trends.
 \end{itemize}
 
-\ac{CVSS} provides a widely recognized framework for assessing the technical severity of vulnerabilities. However, it has been criticized for its inability to account for contextual factors, such as the likelihood of exploitation or the operational impact of a vulnerability (see section \ref{subsec:common-vulnerability-scoring-system}). Studies have also shown high variability in \ac{CVSS} scoring, with discrepancies of up to 2--4 points between professionals \autocite{spring_time_2021}, highlighting the need for complementary approaches.
+As outlined in section~\ref{subsec:summary_impact}, \ac{CVSS} alone has been criticized for overlooking contextual factors and exhibiting scoring inconsistencies of 2--4 points among practitioners \autocite{spring_time_2021}. To address these gaps, \ac{EPSS} is incorporated as a complementary metric, leveraging real-world exploitation data to provide a more dynamic, threat-focused perspective. By combining \ac{CVSS}'s standardized impact assessment with \ac{EPSS}'s empirical likelihood estimations, this approach facilitates more context-aware remediation prioritization and aligns with industry best practices. This synergy ensures that vulnerabilities with both high severity and a proven likelihood of exploitation receive immediate attention, while those posing lower real-world risk can be deprioritized, leading to more efficient allocation of remediation resources.
 
-To address these limitations, \ac{EPSS} is incorporated into the model. By leveraging empirical data on exploit trends and public vulnerability disclosures, \ac{EPSS} provides a dynamic, data-driven perspective that complements \ac{CVSS}'s static metrics. This combination allows for more actionable and context-aware vulnerability prioritization, aligning with industry-leading solutions such as \ac{R7IVM} and \ac{TVM} (see section \ref{sec:multidimensional-approaches-tools}), which also integrate exploit likelihood and contextual factors into their scoring systems.
-
-These dimensions form the foundation of the classification model, used to evaluate vulnerabilities. By integrating standardized technical scoring with real-world exploitability data, this approach offers a \emph{nearly optimal} solution for severity-based decision-making and resource allocation in most scenarios, as this integration balances static severity metrics with dynamic threat intelligence, ensuring that both long-term structural risks and immediate threats are considered. However, some organizations may need to factor in additional internal criteria—such as extended liability or compliance requirements—that lie beyond the scope of \ac{CVSS} and \ac{EPSS}.
+These dimensions form the foundation of the classification model used to evaluate vulnerabilities. By integrating standardized technical scoring with real-world exploitability data, this approach aligns with leading industry solutions (see section~\ref{sec:multidimensional-approaches-tools}) for severity-based decision-making and resource allocation, as it balances static severity metrics with dynamic threat intelligence and ensures that both long-term structural risks and immediate threats are considered. However, some organizations may need to factor in additional internal criteria - such as extended liability or compliance requirements - that lie beyond the scope of \ac{CVSS} and \ac{EPSS}.
 
 \section{Algorithm for Computing Classifications}
 \label{sec:algorithm-classifications}
@@ -60,7 +58,9 @@ The classification algorithm prioritizes vulnerabilities by combining these dime
 The model integrates data from multiple sources to provide comprehensive information for each dimension:
 
 \begin{itemize}
-    \item \ac{CVE}, \ac{CVSS}, and \ac{EPSS} Scores: Sourced from databases such as the \ac{NVD}, \ac{OSV}, FIRST.org, and \ac{GAD}, offering insights into technical severity and the likelihood of exploitation.
+    \item \ac{CVE} ID, \ac{CVSS} Score, and \ac{EPSS} Score:
+    Sourced from databases such as the \ac{NVD}, \ac{OSV}, FIRST.org, and \ac{GAD}.
+    The \ac{CVE} identifier provides a standardized reference for the vulnerability, while \ac{CVSS} and \ac{EPSS} offer insights into technical severity and exploitation likelihood, respectively.
 \end{itemize}
 
 \subsection{Handling Of Missing Data}
@@ -104,7 +104,7 @@ This approach ensures that users are fully informed about how each vulnerability
 
 In this section, we present the \ac{SSVC} vulnerability prioritization methodology, which leverages the \ac{SSVC} framework to generate tailored remediation recommendations through structured decision trees. These decision trees guide stakeholders, such as developers, operational teams, and security managers, in determining the most appropriate remediation actions for each vulnerability.
 
-The \ac{SSVC} framework, as discussed in section \ref{subsec:stakeholder-specific-vulnerability}, does not contribute directly to the vulnerability score calculation but plays a critical role in guiding remediation efforts by aligning recommendations with organizational priorities. It evaluates vulnerabilities based on criteria such as the operational impact, urgency, and specific security requirements of different stakeholders.
+The \ac{SSVC} framework, as discussed in section~\ref{subsec:stakeholder-specific-vulnerability}, does not directly affect the vulnerability score but guides remediation by aligning recommendations with organizational priorities. As outlined in section~\ref{subsec:summary_impact}, it mirrors industry solutions (e.g., Tenable, Rapid7, Snyk) by factoring in elements such as operational impact and urgency. Once the combined severity score is set, a \ac{SSVC}-based decision tree incorporates parameters like \emph{Vulnerability Classification}, \emph{Patch Availability}, \emph{System Usage}, and \emph{Asset Criticality}, gathered via a frontend user query to ensure context-informed remediation. 
 
 Using the decision trees, vulnerabilities are categorized and prioritized for immediate patching, monitoring, or deprioritization. For example, vulnerabilities affecting high-priority assets or those with a significant operational impact are flagged for urgent remediation, while less critical issues might be scheduled for future monitoring. This ensures that remediation efforts are both efficient and aligned with the critical needs of the organization.
 
@@ -151,14 +151,15 @@ Using the decision trees, vulnerabilities are categorized and prioritized for im
 \section{Algorithm for Remediation Recommendation}
 \label{sec:algorithm-remediation}
 
-This algorithm provides remediation recommendations based on the \ac{SSVC} model. By considering factors such as stakeholder roles (e.g., developers, security coordinators), patch availability, and asset criticality, the algorithm generates tailored actions to address vulnerabilities efficiently. The following steps outline the decision-making process for each vulnerability:
+This algorithm provides remediation recommendations based on the \ac{SSVC} model. By considering factors such as stakeholder roles (e.g., developers, security coordinators), \emph{Patch Availability}, and \emph{Asset Criticality}, the algorithm generates tailored actions to address vulnerabilities efficiently. The following steps outline the decision-making process for each vulnerability:
 
 \begin{enumerate}
-    \item \textit{Input Retrieval and Initial Assessment:} The algorithm collects essential information about each vulnerability, including:
+    \item \textit{Input Retrieval and Initial Assessment:}  
+    The algorithm collects essential information about each vulnerability (e.g., the data points listed below), though in practice additional parameters may also be gathered to capture further contextual details:
     \begin{itemize}
-        \item Stakeholder Role to identify the responsibilities and potential impact for each user type, e.g., developers, operators, or security coordinators.
-        \item Asset Criticality to determine the priority based on the business importance of the affected asset.
-        \item Patch Availability to inform the urgency and feasibility of the remediation.
+        \item \emph{Stakeholder Role} to identify the responsibilities and potential impact for each user type, e.g., developers, operators, or security coordinators.
+        \item \emph{Asset Criticality} to determine the priority based on the business importance of the affected asset.
+        \item \emph{Patch Availability} to inform the urgency and feasibility of the remediation.
     \end{itemize}
 
     \item \textit{\ac{SSVC}-Based Decision Tree for Remediation Action:} The algorithm uses \ac{SSVC}-inspired decision trees tailored to the roles of different stakeholders. In this example, the stakeholders include developers and security coordinators, each of whom receives specific recommendations based on their roles and responsibilities. This ensures that each role receives appropriate remediation guidance based on the specific characteristics of the vulnerability. Example actions for each stakeholder include:
@@ -199,16 +200,16 @@ This model provides a structured approach for ranking all known vulnerabilities 
     The total score for each vulnerability is calculated from the weighted dimensions (\ac{CVSS} score and the \ac{EPSS} score). This score provides a unified measure of severity.
     
     \item \textbf{Handling Missing Data (Default Score 10.1):} 
-    When essential data for scoring is unavailable, the algorithm assigns a placeholder score of \textbf{10.1}—exceeding the maximum valid severity of 10.0. In the user interface, this appears as a pink \textbf{“UNKNOWN”} label rather than the numeric score, ensuring it is displayed first in the dashboard and prompting immediate attention to gather the missing information.
+    When essential data for scoring is unavailable, the algorithm assigns a placeholder score of \textbf{10.1} - exceeding the maximum valid severity of 10.0. In the user interface, this appears as a pink \textbf{“UNKNOWN”} label rather than the numeric score, ensuring it is displayed first in the dashboard and prompting immediate attention to gather the missing information.
     
     \item \textbf{Sorting and Rank-Order Calculation:} 
-    All classified vulnerabilities are sorted in descending order of their total (or placeholder) score, with the highest scores—whether valid or placeholder—representing the most urgent cases.
+    All classified vulnerabilities are sorted in descending order of their total (or placeholder) score, with the highest scores - whether valid or placeholder - representing the most urgent cases.
     
     \item \textbf{Resource Allocation Guidance:} 
     Based on the ranked list, organizations can allocate resources toward the vulnerabilities that pose the highest risk. This enables a focused remediation effort, ensuring that the most severe or unknown-risk vulnerabilities are addressed first.
     
     \item \textbf{Dynamic Re-Ranking Based on Score Changes:} 
-    If there are updates to any of the vulnerability scores—such as new threat intelligence or changes in asset criticality—the model recalculates and reorders the list to reflect the latest context, keeping the priority list up-to-date.
+    If there are updates to any of the vulnerability scores - such as new threat intelligence or changes in asset criticality - the model recalculates and reorders the list to reflect the latest context, keeping the priority list up-to-date.
 \end{enumerate}
 
 This ranking model complements the multi-dimensional classification and remediation framework by establishing a clear, actionable prioritization order. It ensures that both high-risk and data-incomplete vulnerabilities are addressed promptly, aligning with strategic security objectives and operational capacity.
