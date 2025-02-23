@@ -259,7 +259,7 @@ This functionality is illustrated in figure~\ref{fig:score-details}, which shows
 
 This section describes the implementation of the model introduced in section~\ref{sec:rank-order-vulnerabilities}, focusing on how vulnerabilities are ranked and prioritized based on their severity.
 
-\subsubsection{Descending Sort of Precalculated Severity Scores and Handling Missing Data}
+\subsection{Descending Sort of Precalculated Severity Scores and Handling Missing Data}
 The implementation takes the precalculated severity scores, which include contributions from \ac{CVSS} and \ac{EPSS}, and sorts them in descending order. This ensures that vulnerabilities with the highest severity scores are prioritized, while those with missing data are given placeholder scores for immediate attention.
 
 For vulnerabilities with missing essential data, a placeholder score of \textbf{10.1} is assigned. This score exceeds the maximum valid severity of 10.0, ensuring these entries are sorted to the top of the list. In the user interface, such entries are highlighted with a pink \textbf{“UNKNOWN”} label, prompting users to investigate and resolve the missing information.
