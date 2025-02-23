@@ -130,17 +130,26 @@ This process ensures that:
 After confirming the presence of \ac{CVSS}, \ac{EPSS}, and any other relevant metrics, the system generates a composite severity score. This calculation is based on the multi-dimensional classification model introduced in section \ref{sec:multi-dimensional-classification}, which integrates technical severity and real-world exploitability.
 
 The algorithm follows the methodology described in section \ref{sec:algorithm-classifications}, prioritizing vulnerabilities by combining these metrics into a unified severity score. The specific steps are outlined as follows:
+
 \begin{enumerate}
   \item \textbf{Validate Required Fields}: If either the \ac{CVSS} base score or \ac{EPSS} value is missing, log an error and default them to \texttt{10.1}.
-  \item \textbf{Combine Weighted Values}: Multiply the \ac{EPSS} probability by 10.0 to make it numerically compatible with \ac{CVSS} score (0--10).  
-  \item \textbf{Compute Mean or Weighted Average}:
+  
+  \item \textbf{Combine Weighted Values}: Multiply the \ac{EPSS} probability by 10.0 to make it numerically compatible with the \ac{CVSS} score (0--10).
+
+  \item \textbf{Compute Weighted Severity Score}: Calculate the severity score using the following pseudocode:
+
   \begin{verbatim}
 double epssScaled = epss * 10.0;
-double severity = (cvss + epssScaled) / 2.0;
+double severity = ((w_cvss * cvss) + (w_epss * epssScaled)) / 2.0;
 severity = round(severity);
   \end{verbatim}
+
+  Here, the weights \( w_{\text{cvss}} \) and \( w_{\text{epss}} \) follow the definitions provided in section \ref{sec:algorithm-classifications}, reflecting their relative importance in the overall severity assessment.
+
   \item \textbf{Store the Result}: Update the database record with the newly calculated severity score.
 \end{enumerate}
+
+
 
 \paragraph{Example of Combining \ac{CVSS} and \ac{EPSS}}
 \label{par:cvss-epss-combination}
@@ -154,15 +163,19 @@ The following example demonstrates how \ac{CVSS} and \ac{EPSS} scores are combin
 function calculateSeverityScore(data):
     cvss = data.getCvssScore()  // 0.0 to 10.0
     epss = data.getEpssScore()  // 0.0 to 1.0
+    w_cvss = data.getWeightCvss()  // CVSS weight
+    w_epss = data.getWeightEpss()  // EPSS weight
 
     if cvss is null or epss is null:
         return 10.1  // Error score if data is missing
 
-    // Scale EPSS and calculate average
-    finalScore = (cvss + (epss * 10.0)) / 2.0
+    // Scale EPSS and calculate weighted average
+    epssScaled = epss * 10.0
+    finalScore = ((w_cvss * cvss) + (w_epss * epssScaled)) / 2.0
 
     return round(finalScore)
 \end{verbatim}
+
 
 
 \section{Frontend Components}
@@ -189,19 +202,30 @@ A component on the frontend prompts developers or security advisors through a se
 
 Each response is processed to build a comprehensive recommended action plan, consisting of advisories such as \enquote{Apply patch immediately} when a vendor patch is available. Below is a code snippet demonstrating the logic for handling decisions within the tree structure and compiling the responses into a final recommendation. For example, one decision involves checking whether a vendor patch is available. Based on this, subsequent steps, such as applying the patch or exploring alternative mitigations, are determined.
 
-\begin{verbatim}
-if (patchAvailableDev === "yes") { 
-    recParts.push("Vendor patch is available. Apply immediately."); 
-} else { 
-    recParts.push("No vendor patch found. Develop a custom fix."); 
-} \end{verbatim}
+\paragraph{Pseudocode for Decision Handling}
+The following pseudocode demonstrates how decisions are processed to generate a recommendation:
 
+\begin{verbatim}
+// Generate recommendation based on patch availability
+function generateRecommendation(data):
+    recParts = []  // Collect recommendation parts
+
+    if data.getPatchAvailableDev() == "yes":
+        recParts.push("Vendor patch is available. Apply immediately.")
+    else:
+        recParts.push("No vendor patch found. Develop a custom fix.")
+
+    return "Developer: " + recParts.join(" ")
+\end{verbatim}
+
+\paragraph{Final Recommendation}
 After collecting all partial recommendations, the final message is composed and delivered (see example figure~\ref{fig:ssvc-recommendation}):
 
 \begin{verbatim}
-const finalMessage = "Developer: " + recParts.join(" "); 
-setSuccessMessage(finalMessage); 
-onComplete(finalMessage);
+// Compile and deliver final recommendation
+finalMessage = "Developer: " + recParts.join(" ")
+setSuccessMessage(finalMessage)
+onComplete(finalMessage)
 \end{verbatim}
 
 \begin{figure}[H]
@@ -212,17 +236,20 @@ onComplete(finalMessage);
 \end{figure}
 
 \subsection{Score Details Button}
-A \textit{Score Details} popup allows users to see the \ac{CVE}-ID, the \ac{CVSS} score and vector, the \ac{EPSS} score, the computed severity, and a textual explanation as described in section \ref{subsec:ui-explaining-score}. This is done through:
+A \textit{Score Details} popup (as described in section \ref{subsec:ui-explaining-score}) allows users to see the \ac{CVE}-ID, the \ac{CVSS} score and vector, the \ac{EPSS} score, the computed severity, and a textual explanation as described in section \ref{subsec:ui-explaining-score}. This is done through:
+
 \begin{itemize}
   \item \textbf{Button Trigger:} A button in the \enquote{Vulnerability Details} view opens a modal dialog.
-  \item \textbf{Dialog Contents:} The modal includes fields for \ac{CVE} ID, \ac{CVSS} 3.1 base score, vector string, \ac{EPSS} metric, and the final severity. If any fields are missing, placeholders (e.g., \texttt{N/A}) or a note about further actions which can be taken are shown.
+  \item \textbf{Dialog Contents:} The modal includes fields for the \ac{CVE} ID, \ac{CVSS} 3.1 base score, vector string, \ac{EPSS} metric, and the final severity. If any fields are missing, placeholders (e.g., \texttt{N/A}) or a note about further actions that can be taken are shown.
+  \item \textbf{Hover Tooltips for Vectors:} Displays hover-based tooltips for each \ac{CVSS} vector attribute. When the user places the cursor over a specific field (e.g., \enquote{Attack Vector} or \enquote{Attack Complexity}), a concise explanation appears to clarify its impact on the vulnerability assessment.
+  \item \textbf{Direct Link to the \ac{CVSS} Calculator:} Provides a direct link to the official \ac{CVSS} calculator \footnote{\url{https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator}}. This link is automatically populated with the relevant vector data, allowing users to quickly review the existing metrics and explore different scoring scenarios.
 \end{itemize}
 
 This functionality is illustrated in figure~\ref{fig:score-details}, which shows an example of the \textit{Score Details} popup.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.45, trim=2mm 2mm 2mm 2mm, clip]{resources/Score-Details-Button.PNG}
+    \includegraphics[scale=0.45, trim=2mm 2mm 2mm 2mm, clip]{resources/Score_Details_Button.PNG}
     \caption{Example of the \textit{Score Details} popup showing diverse data their explanation, and recommendations.}
     \label{fig:score-details}
 \end{figure}
@@ -248,6 +275,11 @@ An example of the sorted list, as displayed in the user interface, is shown in f
 
 \section{Conclusion}
 \label{sec:implementation-conclusion}
-The implementation details presented in this chapter illustrate how the architectural specifications (see chapter \ref{chapter:architecture}) result in a functional system that seamlessly integrates both backend and frontend components. Key building blocks, such as caching and time-based invalidations (see section \ref{subsec:caching-repository}), ensure that data remains reliable, performant, and up-to-date without overloading external services with unnecessary requests. Furthermore, the mechanisms for data acquisition (mentioned in section \ref{subsec:data-acquisition}) demonstrate how existing \ac{OSV} information is efficiently utilized to fetch updates only when absolutely necessary.
 
-Based on this foundation, the \ac{SSVC} endpoint (section \ref{par:ssvc-recommendation-endpoint}) and the role-specific frontend logic (section \ref{sec:frontend-components}) enable tailored remediation recommendations for different user roles. Additionally, \ac{CVSS}- and \ac{EPSS}-based data are combined to account for both technical severity levels and context-dependent severity assessments. This is complemented by the ranking and visualization of vulnerabilities (section \ref{sec:ranking-implementation}), which organizes all information in a prioritized list and highlights missing data using a distinct placeholder.
+The implementation details presented in this chapter show how the multi-dimensional vulnerability classification and remediation framework (see chapter~\ref{chapter:multidimensional-vulnerability-classification}) and the proposed system design (see chapter~\ref{chapter:architecture}) have been realized in a fully functional solution that integrates both backend and frontend components. Critical elements, such as caching and scheduled refresh (see section~\ref{subsec:caching-repository}), ensure that vulnerability data remains reliable, and continuously up-to-date, while minimizing external lookups.
+
+The system interaction workflow (see section~\ref{subsec:system-interaction}) highlights how local \ac{OSV} data is leveraged, triggering external lookups for \ac{CVSS} and \ac{EPSS} only when strictly necessary. Building on these processes, the \ac{SSVC} endpoint (see section~\ref{par:ssvc-recommendation-endpoint}) and role-specific frontend logic (see section~\ref{sec:frontend-components}) enable targeted remediation recommendations for different user roles.
+
+Moreover, combining \ac{CVSS} and \ac{EPSS} metrics captures both technical severity and exploitability factors in accordance with the multi-dimensional model. Finally, the ranking and visualization (see section~\ref{sec:ranking-implementation}) allow for effective prioritization of vulnerabilities, with any missing data explicitly flagged via a placeholder severity score (e.g., \texttt{10.1}). Taken together, these components form a cohesive, user-focused system that significantly streamlines vulnerability management and remediation activities, fulfilling the objectives outlined in earlier chapters.
+
+
