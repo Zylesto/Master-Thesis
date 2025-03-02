@@ -1,83 +1,98 @@
-\chapter{Evaluation of the Realization \\ Against the Models}
-\label{chapter:evaluation}
+\chapter{Evaluation of the Implementation Against the Requirements}
+\label{sec:evaluation}
 
-This chapter evaluates how the final system in chapter~\ref{chapter:implementation} addresses the model requirements set out in chapter~\ref{chapter:multidimensional-vulnerability-classification}. The following sections correspond to the tasks defined in the model.
+This chapter evaluates the implemented system described in chapter~\ref{chapter:implementation} against the requirements defined in chapter~\ref{chapter:requirements}. Each requirement is checked and evaluated with concrete examples to determine whether it has been adequately addressed.
 
-\section{Classification and Recommendation Concept}
-\label{section:eval-classification-concept}
+\section{Evaluation of Functional Requirements}
 
-\paragraph{Model (Chapter~\ref{chapter:multidimensional-vulnerability-classification}).}
-The model establishes two primary processes: 
-\begin{itemize}
-  \item \emph{Classification}: Assessing a vulnerability’s severity through various inputs (e.g., \ac{CVSS}, \ac{EPSS}).
-  \item \emph{Recommendation}: Suggesting appropriate remediation or follow-up actions based on stakeholder needs, patch availability, or other contextual factors.
-\end{itemize}
-These processes are presented in the model as conceptually distinct, allowing for an independent evaluation of severity and a separate derivation of recommended steps.
+This section reviews each functional requirement, detailing how the implemented solution meets each criterion with specific examples.
 
-\paragraph{Implementation (Chapter~\ref{chapter:implementation}).}
-In practice, the system:
-\begin{itemize}
-  \item Performs classification by gathering metrics (\ac{CVSS}, \ac{EPSS}) and computing a severity score.  
-  \item Offers a recommendation workflow (\textit{e.g.}, \ac{SSVC} or decision trees) that can incorporate these classification metrics if desired, but also draws on additional data (such as user role or patch availability).  
-\end{itemize}
-Hence, the recommendation process may, but does not have to, rely on the classification score. Both classification and recommendation are available as modular components.
+\begin{enumerate}
+		
+	\item \textbf{Multidimensional Vulnerability Classification Model (\ref{req:multidimensional_classification})}
+	      
+	      The implementation provides a multidimensional vulnerability classification by combining multiple vulnerability metrics into a unified severity score. For example, as described in section~\ref{subsec:severity-score}, \ac{CVSS} and \ac{EPSS} metrics are combined to produce an actionable severity rating. \textbf{This requirement is fulfilled.}
+	      
+	\item \textbf{Algorithm for Computing Vulnerability Classifications (\ref{req:classification_algorithm})}
+	      
+	      The implemented classification algorithm calculates severity scores using available metrics (section~\ref{subsec:severity-score}). This includes combining a weighted \ac{CVSS} score with a weighted \ac{EPSS} score to provide a clear and precise classification. \textbf{This requirement is fulfilled.}
+	      
+	\item \textbf{Remediation Recommendation Algorithm (\ref{req:remediation_algorithm})}
+	      
+	      The system generates tailored remediation recommendations using structured decision trees based on stakeholder roles, asset criticality, and patch availability (section~\ref{subsec:ssvc-integration}). For instance, a developer is provided recommendations like \enquote{Apply vendor patch immediately} if available or \enquote{Develop a custom mitigation} otherwise. \textbf{This requirement is fulfilled.}
 
-\paragraph{Conclusion.}
-The implementation supports a \emph{separation of concerns}: Classification determines severity, while recommendations can be made with or without explicit reference to the classification output. This aligns with the model’s intent to treat classification and recommendation as distinct yet potentially complementary processes.
+\newpage
+          
+	\item \textbf{Rank-Ordering Model for Vulnerabilities (\ref{req:vulnerability_ranking_model})}
+	      
+	      Vulnerabilities are ranked by their calculated severity, prioritizing the most critical vulnerabilities at the top (section~\ref{sec:ranking-implementation}). For example, vulnerabilities with higher computed severity scores appear prominently. \textbf{This requirement is fulfilled.}
+	      
+	\item \textbf{Interactive Score Explanation Interface (\ref{req:interactive_explanation})}
+	      
+    The \enquote{Score Details} interface displays comprehensive vulnerability information, including \ac{CVE} identifiers, metrics, and an interactive, pre-filled link to the official \ac{CVSS} calculator. Interactive tooltips offer detailed explanations for terms like \enquote{Attack Vector} (section~\ref{sec:frontend-components}). \textbf{This requirement is fulfilled.}
+	      
+	\item \textbf{Handling of Missing Vulnerability Data (\ref{req:missing_data_handling})}
+	      
+    When critical data is missing, the system assigns a placeholder severity score of 10.1, prioritizing the vulnerability at the top and visually highlighting it in pink with the label \enquote{UNKNOWN}. This prompts users to address incomplete data entries (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
+	      
+	\item \textbf{User Interface Warning for Missing Data (\ref{req:frontend_warning_missing_data})}
+	      
+	      The user interface explicitly alerts users to missing data by highlighting vulnerabilities with a pink \enquote{UNKNOWN} label, communicating the need for immediate corrective actions (section~\ref{sec:ranking-implementation}). \textbf{This requirement is fulfilled.}
+	      
+	\item \textbf{Role-Based Decision Trees for Remediation (\ref{req:ssvc_decision_tree})}
+	      
+	      Interactive decision trees guide stakeholders through remediation options tailored to context. For instance, developers answering questions about patch availability and asset criticality receive actionable steps like immediate patching or monitoring (section~\ref{subsec:ssvc-integration}). \textbf{This requirement is fulfilled.}
+	      
+	\item \textbf{Role-Specific Recommendations (\ref{req:role_specific_recommendations})}
+	      
+	      The system provides explicit role-specific recommendations. Developers receive instructions such as \enquote{Apply patch immediately} (section~\ref{subsec:ssvc-integration}). \textbf{This requirement is fulfilled.}
+	      
+	\item \textbf{Caching Mechanism for External Data (\ref{req:data_caching_mechanism})}
+	      
+	      Robust caching mechanisms significantly reduce external data retrieval. For instance, the system caches \ac{CVSS} vectors locally and performs efficient batch retrieval of \ac{EPSS} data (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
 
-\section{A Model for Multi-Dimensional Classification of Vulnerabilities}
-\label{section:eval-multidimensional-classification}
+\newpage
 
-\paragraph{Model (Section~\ref{sec:multi-dimensional-classification}).}
-The model mandates that vulnerability severity be evaluated using multiple factors (e.g., \ac{CVSS} and \ac{EPSS}) to capture both technical impact and real-world exploit likelihood.
+	\item \textbf{Regular Data Synchronization (\ref{req:data_synchronization})}
+	      
+	      A nightly synchronization cycle updates vulnerability data. Batch retrieval of \ac{EPSS} data and individual queries to external databases (\ac{NVD}) ensure data freshness, clearly illustrated by the scheduled refresh mechanism (section~\ref{subsec:scheduled-refresh}). \textbf{This requirement is fulfilled.}
+	      
+	\item \textbf{Persistence of Remediation Decisions (\ref{req:ssvc_recommendation_persistence})}
+	      
+	      Remediation decisions through the \ac{SSVC} recommendation endpoint are persistently stored. For instance, decisions such as \enquote{Apply patch immediately} are saved and retrievable (section~\ref{par:ssvc-recommendation-endpoint}). \textbf{This requirement is fulfilled.}
+	      
+\end{enumerate}
 
-\paragraph{Implementation (Section~\ref{subsec:severity-score}).}
-The final system retrieves these metrics from different sources (see section \ref{subsec:data-acquisition}) , merges them, and normalizes them into a single severity score. It also accommodates additional dimensions (if needed) without disrupting existing logic.
+\section{Evaluation of Non-Functional Requirements}
 
-\paragraph{Conclusion.}
-The multi-dimensional classification requirement is \emph{successfully addressed}, as multiple inputs are considered and can be expanded for future needs.
+This section evaluates the non-functional requirements, emphasizing system quality, performance, and usability, and details how the implementation meets each requirement.
 
-\section{An Algorithm to Compute a Classification for a Known Vulnerability}
-\label{section:eval-classification-algorithm}
+\begin{enumerate}
+	\item \textbf{Modularity (\ref{nfr:modularity})}
+	      
+	      The system distinctly separates backend functionalities (such as data caching, scheduled tasks, and repositories) from frontend interactions, facilitating maintainability. For instance, the repository layer manages data storage independently from the scoring algorithm and user interface logic (section~\ref{sec:backend-components}). \textbf{This requirement is fulfilled.}
+	            
+	\item \textbf{Scalability (\ref{nfr:scalability})}
+	            
+	      Scalability is achieved through efficient batch-processing of external data (e.g., \ac{EPSS} batch requests) and a scheduled refresh mechanism to handle growing data volumes and simultaneous user interactions without performance degradation (section~\ref{subsec:scheduled-refresh}). \textbf{This requirement is fulfilled.}
+	            
+	\item \textbf{Usability (\ref{nfr:usability})}
+	            
+	      The system provides a user-friendly interface featuring clear navigation, interactive decision trees, and comprehensive score explanations. Interactive components, such as tooltips and pre-filled links to external calculators, significantly enhance usability (section~\ref{sec:frontend-components}). \textbf{This requirement is fulfilled.}
+	      
+	\item \textbf{Compliance with External API Rate Limits (\ref{nfr:rate_limit_compliance})}
+	            
+    The implementation responsibly manages external API requests using caching and batching strategies, significantly reducing API calls and thus reducing rate-limit violations. (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
+	      
+	\item \textbf{Reliability and Error Handling (\ref{nfr:reliability_fallbacks})}
+	            
+	      Robust error handling mechanisms are implemented. For instance, when critical data (\ac{CVSS} or \ac{EPSS}) is missing, the system assigns a placeholder severity score of 10.1, prioritizing the vulnerability at the top and visually marking it as \enquote{UNKNOWN} to clearly communicate the issue (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
+	            
+	\item \textbf{Maintainability (\ref{nfr:maintainability})}
+	            
+	      The modular architecture and clear separation of backend layers (controller, service, data layers) enable straightforward maintenance and integration of future enhancements, such as additional data sources or scoring mechanisms (section~\ref{sec:backend-components} and section~\ref{sec:frontend-components}). \textbf{This requirement is fulfilled.}
+\end{enumerate}
 
-\paragraph{Model (Section~\ref{sec:algorithm-classifications}).}
-A clear algorithmic procedure is outlined, combining metrics (such as \ac{CVSS} and \ac{EPSS}) into a unified severity assessment. Missing data should be handled via a default mechanism.
+\section{Summary}
 
-\paragraph{Implementation (Paragraph~\ref{par:cvss-epss-combination}).}
-The code checks for cached \ac{CVSS} and \ac{EPSS}, scales \ac{EPSS} to align with the 0--10 \ac{CVSS} range, and computes an average. If critical data is absent, a placeholder score (10.1) ensures unknown vulnerabilities are prioritized.
-
-\paragraph{Conclusion.}
-The classification algorithm from the model is \emph{fully implemented} and includes a fallback for incomplete information.
-
-\section{Model and Algorithm for Remediation Recommendation}
-\label{section:combined-remediation}
-
-\paragraph{Model (Section~\ref{sec:remediation_recommendation}).}
-The model prescribes a framework for suggesting specific remediation actions (e.g., immediate patching or monitoring) based on classification results and stakeholder context. Different user roles (e.g., developers, security advisors) follow tailored decision paths, factoring in patch availability and asset criticality. This allows for meaningful, role-specific recommendations that incorporate the likelihood of exploit, criticality levels, and other contextual parameters.
-
-\paragraph{Algorithm (Section~\ref{sec:algorithm-remediation}).}
-An explicit decision-tree-like or rule-based algorithm adapts to exploit likelihood, stakeholder roles, and available fixes. By evaluating relevant fields (e.g., patch availability, exploit probability, system criticality), it produces step-by-step guidelines, which are stored for tracking and future reference. This ensures consistent and repeatable recommendations across multiple user roles and vulnerability scenarios.
-
-\paragraph{Implementation (Section~\ref{subsec:ssvc-integration}).}
-The system integrates the model and algorithm by offering different decision paths for each stakeholder (e.g., developers, security advisors). Developers can focus on immediate patch availability, while security advisors assess system criticality and potential attack vectors. Through this context-aware approach, role-specific and comprehensive remediation measures are generated and executed. The final recommendation is tracked to enable continual improvement and to provide a reference for similar future cases.
-
-\paragraph{Conclusion.}
-The remediation model and its algorithmic foundation are \emph{fully realized}: classification outputs drive role-specific remedial actions, incorporating stakeholder context into a structured, rule-based process. As a result, the approach remains \emph{completely operational}, guaranteeing consistent, repeatable, and context-sensitive recommendations for a wide range of users and threat situations.
-
-
-\section{A Model to Rank-Order All Classified Vulnerabilities}
-\label{section:eval-rank-order}
-
-\paragraph{Model (Section~\ref{sec:rank-order-vulnerabilities}).}
-A ranking mechanism should reorder vulnerabilities so that critical or unknown (missing data) vulnerabilities appear at the top for immediate attention.
-
-\paragraph{Implementation (Section~\ref{sec:ranking-implementation}).}
-Vulnerabilities are sorted by their composite severity score in descending order. Entries with placeholder scores (10.1) appear first, ensuring that incompletely assessed vulnerabilities are not overlooked.
-
-\paragraph{Conclusion.}
-Rank-ordering as specified in the model is \emph{fully achieved}, providing a clear prioritization scheme for vulnerability management.
-
-\section{Conclusion}
-\label{section:evaluation-conclusion}
-
-Overall, the system described in chapter~\ref{chapter:implementation} fulfills all tasks set out in chapter~\ref{chapter:multidimensional-vulnerability-classification}. Each element of the model—including multi-dimensional classification, classification algorithms, remediation recommendations, and ranking—has been translated into a functional implementation. This alignment demonstrates a coherent end-to-end solution that meets the stated requirements.
+This evaluation demonstrates that the implemented system effectively fulfills all defined functional and non-functional requirements, supporting robust, scalable, and user-centric vulnerability management.

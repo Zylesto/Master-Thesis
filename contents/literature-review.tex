@@ -286,31 +286,24 @@ The literature review of current vulnerability management tools (refer to sectio
 
 \subsection*{Summary and Impact on the Proposed Approach}
 \label{subsec:summary_impact}
-Insights from Tenable, Rapid7, and Snyk highlight the need for a multidimensional approach to vulnerability management - one that integrates both technical severity and real-world exploit likelihood.
-Furthermore, a notable downside of relying solely on \ac{CVSS} is its scoring inconsistencies, with discrepancies of 2--4 points even among experienced practitioners \autocite{spring_time_2021}. These inconsistencies can lead to misaligned remediation priorities and underscore the need for a probabilistic component like \ac{EPSS}.
-In response, this thesis proposes a methodology that merges the quantitative assessment of \ac{CVSS} with the probabilistic modeling of \ac{EPSS} into a unified scoring system. This hybrid model draws on multiple data sources, including vendor intelligence, threat intelligence, vulnerability age, and public exploit presence, ensuring a more context-aware prioritization strategy.
 
-By combining these metrics, a more effective remediation framework emerges: while \ac{CVSS} quantifies the \emph{impact} of a vulnerability (i.e., its potential severity if exploited), \ac{EPSS} estimates the \emph{likelihood} of actual exploitation based on real-world data. This integration enables more precise prioritization - vulnerabilities with both high impact and a high probability of exploitation should be addressed first, whereas those with a high \ac{CVSS} score but low \ac{EPSS} value may be deprioritized. Studies (e.g., \autocite{jacobs_exploit_2021, first_epss_2021}) confirm that incorporating threat-likelihood metrics alongside \ac{CVSS} enhances remediation efficiency by reducing patch workloads while still mitigating the most actively exploited vulnerabilities.
+Insights from Tenable, Rapid7, and Snyk highlight the need for a multidimensional approach to vulnerability management - one that integrates both technical severity and real-world exploit likelihood. Furthermore, a notable downside of relying solely on \ac{CVSS} is its scoring inconsistencies, with discrepancies of 2--4 points even among experienced practitioners \autocite{spring_time_2021}. These inconsistencies can lead to misaligned remediation priorities and underscore the need for a probabilistic component like \ac{EPSS}.
 
-Figure~\ref{fig:epss_cvss_compare} illustrates how these two metrics intersect to guide a more comprehensive, risk-based remediation strategy.
+The literature review thus emphasizes the importance of merging the quantitative assessment provided by \ac{CVSS} with the probabilistic modeling of \ac{EPSS} into a unified scoring system. Such a hybrid model, suggested by existing tools, considers multiple data sources, including vendor intelligence, threat intelligence, vulnerability age, and public exploit presence, ensuring a more context-aware prioritization strategy.
+
+Using \ac{EPSS} and \ac{CVSS} together enhances the prioritization process significantly. \ac{CVSS} quantifies the \emph{impact} of a vulnerability (i.e., potential severity if exploited), while \ac{EPSS} estimates the \emph{likelihood} of actual exploitation based on empirical data. 
+
+Figure~\ref{fig:epss_cvss_compare} illustrates this concept clearly. Each dot represents vulnerabilities (\ac{CVE}s), showing the relationship between \ac{EPSS} exploit probabilities and \ac{CVSS} severity scores as of 2021-05-16.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{resources/EPSS_CVSS_Compare.png}
-    \caption[\ac{EPSS} and \ac{CVSS} Comparison]{Illustration of how \ac{EPSS} probabilities and \ac{CVSS} severity scores complement each other for better risk-based prioritization \autocite{first_epss_2021}.}
-    \label{fig:epss_cvss_compare}
+	\centering
+	\includegraphics[width=\textwidth]{resources/EPSS_CVSS_Compare.png}
+	\caption[\ac{EPSS} and \ac{CVSS} Comparison]{Illustration of how \ac{EPSS} probabilities and \ac{CVSS} severity scores complement each other for better risk-based prioritization \autocite{first_epss_2021}.}
+	\label{fig:epss_cvss_compare}
 \end{figure}
 
-To retrieve the \ac{CVSS} and \ac{EPSS} scores, the databases outlined in section~\ref{sec:vulnerability-databases-resources} will be utilized:
+Most vulnerabilities cluster towards lower exploit probabilities. Only a small fraction of vulnerabilities have \ac{EPSS} scores above 0.5 (50\%). Although there is some correlation between \ac{EPSS} and \ac{CVSS} scores, this visualization clearly indicates that attackers do not exclusively target vulnerabilities that produce the greatest impact or are necessarily the easiest to exploit.
 
-\begin{itemize}
-    \item The \ac{GAD} (see section~\ref{subsec:github-advisory-database}) serves as the primary source for identifying the \ac{CVE} identifier associated with a given vulnerability.
-    \item The \ac{OSV} (detailed in section~\ref{subsec:open-source-vulnerabilities}) and the \ac{NVD} (outlined in section~\ref{subsec:national-vulnerability-database}) provide \ac{CVSS} scores for a given \ac{CVE} identifier.
-    \item The FIRST.org \ac{EPSS} Database (described in section ~\ref{subsec:first-epss-database}) is employed to retrieve the \ac{EPSS} score corresponding to a specific \ac{CVE} identifier.
-\end{itemize}
+For prioritization, vulnerabilities in the lower-left quadrant (low probability, low impact) can typically be deprioritized. Vulnerabilities in the upper-left quadrant (high exploit probability, low impact) should be evaluated further, particularly in chained attack scenarios. Those in the lower-right quadrant (low exploit probability, high impact) warrant monitoring due to potential future exploitability. Vulnerabilities in the upper-right quadrant represent the highest risks (high probability, high impact) and must be addressed first \autocite{first_epss_2021}.
 
-After establishing this combined severity score, the thesis applies a decision tree for remediation planning, drawing on the \ac{SSVC} framework. This tree incorporates \emph{Vulnerability Classification}, \emph{Patch Availability}, \emph{System Usage} (public or internal), \emph{Asset Criticality}, \emph{Fix Complexity}, \emph{Personal Code Ownership}, \emph{Exploit Likelihood}, \emph{Observed Exploits}, \emph{Compliance Requirement}, and \emph{Business Impact}. The required input data for these parameters is collected through a user query in the frontend, ensuring that context-specific factors are considered in the decision-making process. By blending a robust quantitative metric with a well-defined remediation process, the proposed framework addresses all of the key data considerations employed by Tenable, Rapid7, and Snyk - ensuring precise prioritization and more informed remediation strategies for critical vulnerabilities.
-
-
-
-
+This approach significantly improves resource allocation efficiency, allowing defenders to focus efforts on the vulnerabilities most likely to compromise systems.

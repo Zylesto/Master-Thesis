@@ -1,116 +1,75 @@
 \chapter{Requirements}
-\label{chap:requirements}
+\label{chapter:requirements}
 
-In this chapter, we detail both functional and non-functional requirements that guide the design and implementation of the proposed system. These requirements are organized around four key components, each pairing a model with an associated algorithm:
-
-\begin{enumerate}
-    \item A model and an algorithm for multi-dimensional classification of vulnerabilities,
-    \item A model and an algorithm to compute a classification for a known vulnerability in the context of a specific software environment,
-    \item A model and an algorithm to provide vulnerability remediation recommendations,
-    \item A model and an algorithm to rank-order all known classified vulnerabilities.
-\end{enumerate}
+This chapter defines the requirements for the system developed in the context of this master's thesis. Requirements are clearly structured and categorized into functional and non-functional requirements.
 
 \section{Functional Requirements}
-This section outlines the functionalities the system must provide to meet the core objectives of vulnerability classification, scoring, remediation, and prioritization.
+The functional requirements specify the necessary capabilities and behaviors the system must deliver to users.
 
-\subsection{RQ1: A Model and an Algorithm for Multi-Dimensional Classification of Vulnerabilities}
-\label{req:RQ1}
-To handle vulnerabilities effectively, the system requires a model and an algorithm that address multiple classification dimensions and ensure user-friendly transparency in scoring.
-
-\begin{itemize}
-    \item \textbf{RQ1.1: Multiple Classification Dimensions}\\
-    \label{req:RQ1.1}  
-    The system must integrate multiple dimensions to classify vulnerabilities.
-
-    \item \textbf{RQ1.2: Handling of Missing Data}\\
-    \label{req:RQ1.2}  
-    The system must be able to manage missing or incomplete data while still providing meaningful classification results.
-
-    \item \textbf{RQ1.3: User Interface for Score Explanation}\\
-    \label{req:RQ1.3}
-    The system must present classification details in an intuitive and transparent manner.
-    \begin{itemize}
-        \item \textbf{RQ1.3.1: Score-Details Button}\\
-        \label{req:RQ1.3.1}  
-        Include a “Show Score-Details” button that displays key classification details.
-
-        \item \textbf{RQ1.3.2: Tooltip Explanations}\\
-        \label{req:RQ1.3.2}  
-        Provide hover-based tooltips for each dimension (e.g., CVSS vector attributes) to explain how each attribute affects severity.
-
-        \item \textbf{RQ1.3.3: Prefilled \ac{CVSS} Calculator Link}\\
-        \label{req:RQ1.3.3}  
-        Offer a direct link to a prefilled \ac{CVSS} calculator, enabling users to quickly explore alternative scoring scenarios.
-    \end{itemize}
-\end{itemize}
-
-\subsection{RQ2: A Model and an Algorithm to Compute a Classification for a Known Vulnerability}
-\label{req:RQ2}
-This set of requirements focuses on computing a classification score for any known vulnerability, taking into account the specific software context.
-
-\begin{itemize}
-    \item \textbf{RQ2.1: Data Gathering}\\
-    \label{req:RQ2.1}  
-    The system must collect vulnerability data from external sources.
-
-    \item \textbf{RQ2.2: Vulnerability Categorization}\\
-    \label{req:RQ2.2}  
-    The system must classify vulnerabilities (e.g., Critical, High, Medium, Low) based on the computed severity scores.
-\end{itemize}
-
-\subsection{RQ3: A Model and an Algorithm to Make Recommendations for Remediation}
-\label{req:RQ3}
-Beyond classification, the system should offer actionable guidance to address discovered vulnerabilities.
-
-\begin{itemize}
-    \item \textbf{RQ3.1: Remediation Guidance}\\
-    \label{req:RQ3.1}  
-    The system must generate targeted recommendations for remediating identified vulnerabilities.
-
-    \item \textbf{RQ3.2: Role-Based Recommendations}\\
-    \label{req:RQ3.2}  
-    Recommendations must be tailored to different stakeholder roles (e.g., developers, security coordinators) and asset criticality.
-
-    \item \textbf{RQ3.3: Action Categorization}\\
-    \label{req:RQ3.3}  
-    The system must categorize recommended actions (e.g., “Immediate Patch,” “Monitor and Prepare Patch,” “Deprioritize”).
-\end{itemize}
-
-\subsection{RQ4: A Model and an Algorithm to Rank-Order All Known Classified Vulnerabilities}
-\label{req:RQ4}
-Finally, the system should prioritize vulnerabilities according to their severity and data completeness.
-
-\begin{itemize}
-    \item \textbf{RQ4.1: Severity-Based Ranking}\\
-    \label{req:RQ4.1}  
-    The system must provide a ranked list of all classified vulnerabilities in descending order of severity.
-
-    \item \textbf{RQ4.2: Priority for Incomplete Data}\\
-    \label{req:RQ4.2}  
-    Vulnerabilities with missing data must be placed at the top of the list to prompt immediate investigation.
-
-    \item \textbf{RQ4.3: Continuous Updating}\\
-    \label{req:RQ4.3}  
-    The system must recalculate the ranking daily to account for new information or changing conditions.
-\end{itemize}
+\begin{enumerate}
+	
+	\item \label{req:multidimensional_classification}
+	    \textbf{Multidimensional Vulnerability Classification Model:} The system shall provide a model capable of classifying vulnerabilities across multiple relevant dimensions, considering various technical and empirical factors.
+	      
+	\item \label{req:classification_algorithm}
+	      \textbf{Algorithm for Computing Vulnerability Classifications:} The system shall include an algorithm that computes a severity classification for vulnerabilities based on relevant and available data sources.
+	      
+	\item \label{req:remediation_algorithm}
+	      \textbf{Remediation Recommendation Algorithm:} The system shall implement an algorithm to generate tailored recommendations for vulnerability remediation, taking into account factors such as stakeholder roles, asset importance, and patch availability.
+	      
+	\item \label{req:vulnerability_ranking_model}
+	      \textbf{Rank-Ordering Model for Vulnerabilities:} The system shall provide a ranking model that prioritizes vulnerabilities according to their calculated severity, ensuring critical vulnerabilities receive immediate attention.
+	      
+	\item \label{req:interactive_explanation}
+	      \textbf{Interactive Score Explanation Interface:} The system's user interface shall offer an interactive component that clearly explains how each vulnerability's overall severity was determined from underlying metrics.
+	      
+	\item \label{req:missing_data_handling}
+	      \textbf{Handling of Missing Vulnerability Data:} When critical data required for scoring is unavailable, the system shall assign a placeholder score and clearly mark such vulnerabilities as having unknown severity.
+	      
+	\item \label{req:frontend_warning_missing_data}
+	      \textbf{User Interface Warning for Missing Data:} The system shall explicitly inform users via the interface when necessary data is missing, prompting immediate action to resolve data completeness issues.
+	      
+	\item \label{req:ssvc_decision_tree}
+	      \textbf{Role-Based Decision Trees for Remediation:} The system shall incorporate structured decision trees to provide customized remediation recommendations tailored to different stakeholder roles.
+	      
+	\item \label{req:role_specific_recommendations}
+	      \textbf{Role-Specific Recommendations:} The system shall support various stakeholder roles, such as developers and security coordinators, by providing recommendations relevant to their specific responsibilities.
+	      
+	\item \label{req:data_caching_mechanism}
+	      \textbf{Caching Mechanism for External Data:} The system shall implement caching for external vulnerability data to reduce unnecessary network requests and ensure efficient data retrieval.
+	      
+	\item \label{req:data_synchronization}
+	      \textbf{Regular Data Synchronization:} The system shall perform regular synchronization with external vulnerability databases, maintaining updated and accurate vulnerability information.
+	      
+	\item \label{req:ssvc_recommendation_persistence}
+	      \textbf{Persistence of Remediation Decisions:} The system shall store and manage remediation decisions for future retrieval.
+	      
+\end{enumerate}
 
 \section{Non-Functional Requirements}
-Non-functional requirements capture the overall qualities and constraints of the system, ensuring it remains usable, scalable, maintainable, and reliable over time.
+The non-functional requirements define quality criteria, constraints, and operational guidelines that the system must fulfill.
 
-\begin{itemize}
-    \item \textbf{RQNF1: Usability}\\
-    \label{req:nonf1}  
-    The user interface must be intuitive and provide clear explanations for scores, remediation options, and any missing data.
-    
-    \item \textbf{RQNF2: Scalability}\\
-    \label{req:nonf2}  
-    The system must efficiently handle large volumes of vulnerabilities to ensure timely classification and updates.
-    
-    \item \textbf{RQNF3: Maintainability}\\
-    \label{req:nonf3}  
-    Configuration for scoring parameters must be easily adjustable without requiring changes to the core system logic.
-    
-    \item \textbf{RQNF4: Reliability}\\
-    \label{req:nonf4}  
-    Data retrieval from external sources must be robust, with appropriate failure handling to avoid partial or corrupted information.
-\end{itemize}
+\begin{enumerate}
+	
+	\item \label{nfr:modularity}
+	      \textbf{Modularity:} The system architecture shall be modular, distinctly separating functions such as data management, scoring computation, caching, and interface interaction to enhance maintainability.
+	      
+	\item \label{nfr:scalability}
+	      \textbf{Scalability:} The system must be scalable to accommodate increased data volumes and user interactions without performance degradation.
+	      
+	\item \label{nfr:usability}
+	      \textbf{Usability:} The user interface shall be intuitive, user-friendly, and provide clear guidance to ensure efficient and effective user interaction.
+	      
+	\item \label{nfr:rate_limit_compliance}
+	      \textbf{Compliance with External API Rate Limits:} The system must manage external API requests responsibly, using strategies such as batching and caching to comply with rate limits and handle errors gracefully.
+	      
+	\item \label{nfr:reliability_fallbacks}
+	      \textbf{Reliability and Error Handling:} Robust error handling mechanisms shall be implemented to maintain reliable system operation and clearly communicate any issues or missing information to users.
+	      
+	\item \label{nfr:maintainability}
+	      \textbf{Maintainability:} The system design shall follow clear separation of concerns, facilitating straightforward modifications, updates, or integration of additional functionalities.
+	      
+\end{enumerate}
+
+\section{Summary}
+This chapter has defined both functional and non-functional requirements essential for building a robust and effective system for vulnerability management, addressing key attributes like modularity, scalability, usability, and transparency.
