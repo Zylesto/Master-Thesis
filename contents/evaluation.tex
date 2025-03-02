@@ -1,97 +1,105 @@
-\chapter{Evaluation of the Implementation Against the Requirements}
+\chapter{Evaluation}
 \label{sec:evaluation}
 
 This chapter evaluates the implemented system described in chapter~\ref{chapter:implementation} against the requirements defined in chapter~\ref{chapter:requirements}. Each requirement is checked and evaluated with concrete examples to determine whether it has been adequately addressed.
 
-\section{Evaluation of Functional Requirements}
+\section{Evaluation of Realization Against the Models}
+
+\subsection{Evaluation of Functional Requirements}
 
 This section reviews each functional requirement, detailing how the implemented solution meets each criterion with specific examples.
 
 \begin{enumerate}
-		
-	\item \textbf{Multidimensional Vulnerability Classification Model (\ref{req:multidimensional_classification})}
+			
+    \item \textbf{Multidimensional Vulnerability Classification Model (\ref{req:multidimensional_classification})}
+    
+    The implementation provides a multidimensional vulnerability classification by combining multiple vulnerability metrics into a unified severity score. For example, as described in section~\ref{subsec:severity-score}, \ac{CVSS} and \ac{EPSS} metrics are combined to produce an actionable severity rating. \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Algorithm for Computing Vulnerability Classifications (\ref{req:classification_algorithm})}
+    
+    The implemented classification algorithm calculates severity scores using available metrics (section~\ref{subsec:severity-score}). This includes combining a weighted \ac{CVSS} score with a weighted \ac{EPSS} score to provide a clear and precise classification. \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Remediation Recommendation Algorithm (\ref{req:remediation_algorithm})}
+    
+    The system generates tailored remediation recommendations using structured decision trees based on stakeholder roles, asset criticality, and patch availability (section~\ref{subsec:ssvc-integration}). For instance, a developer is provided recommendations like \enquote{Apply vendor patch immediately} if available or \enquote{Develop a custom mitigation} otherwise. \textbf{This requirement is fulfilled.}
 	      
-	      The implementation provides a multidimensional vulnerability classification by combining multiple vulnerability metrics into a unified severity score. For example, as described in section~\ref{subsec:severity-score}, \ac{CVSS} and \ac{EPSS} metrics are combined to produce an actionable severity rating. \textbf{This requirement is fulfilled.}
-	      
-	\item \textbf{Algorithm for Computing Vulnerability Classifications (\ref{req:classification_algorithm})}
-	      
-	      The implemented classification algorithm calculates severity scores using available metrics (section~\ref{subsec:severity-score}). This includes combining a weighted \ac{CVSS} score with a weighted \ac{EPSS} score to provide a clear and precise classification. \textbf{This requirement is fulfilled.}
-	      
-	\item \textbf{Remediation Recommendation Algorithm (\ref{req:remediation_algorithm})}
-	      
-	      The system generates tailored remediation recommendations using structured decision trees based on stakeholder roles, asset criticality, and patch availability (section~\ref{subsec:ssvc-integration}). For instance, a developer is provided recommendations like \enquote{Apply vendor patch immediately} if available or \enquote{Develop a custom mitigation} otherwise. \textbf{This requirement is fulfilled.}
-
-\newpage
-          
-	\item \textbf{Rank-Ordering Model for Vulnerabilities (\ref{req:vulnerability_ranking_model})}
-	      
-	      Vulnerabilities are ranked by their calculated severity, prioritizing the most critical vulnerabilities at the top (section~\ref{sec:ranking-implementation}). For example, vulnerabilities with higher computed severity scores appear prominently. \textbf{This requirement is fulfilled.}
-	      
-	\item \textbf{Interactive Score Explanation Interface (\ref{req:interactive_explanation})}
-	      
+    \newpage
+	                
+    \item \textbf{Rank-Ordering Model for Vulnerabilities (\ref{req:vulnerability_ranking_model})}
+    
+    Vulnerabilities are ranked by their calculated severity, prioritizing the most critical vulnerabilities at the top (section~\ref{sec:ranking-implementation}). For example, vulnerabilities with higher computed severity scores appear prominently. \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Interactive Score Explanation Interface (\ref{req:interactive_explanation})}
+    
     The \enquote{Score Details} interface displays comprehensive vulnerability information, including \ac{CVE} identifiers, metrics, and an interactive, pre-filled link to the official \ac{CVSS} calculator. Interactive tooltips offer detailed explanations for terms like \enquote{Attack Vector} (section~\ref{sec:frontend-components}). \textbf{This requirement is fulfilled.}
-	      
-	\item \textbf{Handling of Missing Vulnerability Data (\ref{req:missing_data_handling})}
-	      
+	      	      
+    \item \textbf{Handling of Missing Vulnerability Data (\ref{req:missing_data_handling})}
+    
     When critical data is missing, the system assigns a placeholder severity score of 10.1, prioritizing the vulnerability at the top and visually highlighting it in pink with the label \enquote{UNKNOWN}. This prompts users to address incomplete data entries (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{User Interface Warning for Missing Data (\ref{req:frontend_warning_missing_data})}
+	      	      
+    The user interface explicitly alerts users to missing data by highlighting vulnerabilities with a pink \enquote{UNKNOWN} label, communicating the need for immediate corrective actions (section~\ref{sec:ranking-implementation}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Role-Based Decision Trees for Remediation (\ref{req:ssvc_decision_tree})}
+	      	      
+    Interactive decision trees guide stakeholders through remediation options tailored to context. For instance, developers answering questions about patch availability and asset criticality receive actionable steps like immediate patching or monitoring (section~\ref{subsec:ssvc-integration}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Role-Specific Recommendations (\ref{req:role_specific_recommendations})}
+	      	      
+    The system provides explicit role-specific recommendations. Developers receive instructions such as \enquote{Apply patch immediately} (section~\ref{subsec:ssvc-integration}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Caching Mechanism for External Data (\ref{req:data_caching_mechanism})}
+	      	      
+    Robust caching mechanisms significantly reduce external data retrieval. For instance, the system caches \ac{CVSS} vectors locally and performs efficient batch retrieval of \ac{EPSS} data (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
 	      
-	\item \textbf{User Interface Warning for Missing Data (\ref{req:frontend_warning_missing_data})}
+    \newpage
 	      
-	      The user interface explicitly alerts users to missing data by highlighting vulnerabilities with a pink \enquote{UNKNOWN} label, communicating the need for immediate corrective actions (section~\ref{sec:ranking-implementation}). \textbf{This requirement is fulfilled.}
-	      
-	\item \textbf{Role-Based Decision Trees for Remediation (\ref{req:ssvc_decision_tree})}
-	      
-	      Interactive decision trees guide stakeholders through remediation options tailored to context. For instance, developers answering questions about patch availability and asset criticality receive actionable steps like immediate patching or monitoring (section~\ref{subsec:ssvc-integration}). \textbf{This requirement is fulfilled.}
-	      
-	\item \textbf{Role-Specific Recommendations (\ref{req:role_specific_recommendations})}
-	      
-	      The system provides explicit role-specific recommendations. Developers receive instructions such as \enquote{Apply patch immediately} (section~\ref{subsec:ssvc-integration}). \textbf{This requirement is fulfilled.}
-	      
-	\item \textbf{Caching Mechanism for External Data (\ref{req:data_caching_mechanism})}
-	      
-	      Robust caching mechanisms significantly reduce external data retrieval. For instance, the system caches \ac{CVSS} vectors locally and performs efficient batch retrieval of \ac{EPSS} data (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
-
-\newpage
-
-	\item \textbf{Regular Data Synchronization (\ref{req:data_synchronization})}
-	      
-	      A nightly synchronization cycle updates vulnerability data. Batch retrieval of \ac{EPSS} data and individual queries to external databases (\ac{NVD}) ensure data freshness, clearly illustrated by the scheduled refresh mechanism (section~\ref{subsec:scheduled-refresh}). \textbf{This requirement is fulfilled.}
-	      
-	\item \textbf{Persistence of Remediation Decisions (\ref{req:ssvc_recommendation_persistence})}
-	      
-	      Remediation decisions through the \ac{SSVC} recommendation endpoint are persistently stored. For instance, decisions such as \enquote{Apply patch immediately} are saved and retrievable (section~\ref{par:ssvc-recommendation-endpoint}). \textbf{This requirement is fulfilled.}
-	      
+    \item \textbf{Regular Data Synchronization (\ref{req:data_synchronization})}
+	      	      
+    A nightly synchronization cycle updates vulnerability data. Batch retrieval of \ac{EPSS} data and individual queries to external databases (\ac{NVD}) ensure data freshness, clearly illustrated by the scheduled refresh mechanism (section~\ref{subsec:scheduled-refresh}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Persistence of Remediation Decisions (\ref{req:ssvc_recommendation_persistence})}
+	      	      
+    Remediation decisions through the \ac{SSVC} recommendation endpoint are persistently stored. For instance, decisions such as \enquote{Apply patch immediately} are saved and retrievable (section~\ref{par:ssvc-recommendation-endpoint}). \textbf{This requirement is fulfilled.}
+	      	      
 \end{enumerate}
 
-\section{Evaluation of Non-Functional Requirements}
+\subsection{Evaluation of Non-Functional Requirements}
 
 This section evaluates the non-functional requirements, emphasizing system quality, performance, and usability, and details how the implementation meets each requirement.
 
 \begin{enumerate}
-	\item \textbf{Modularity (\ref{nfr:modularity})}
-	      
-	      The system distinctly separates backend functionalities (such as data caching, scheduled tasks, and repositories) from frontend interactions, facilitating maintainability. For instance, the repository layer manages data storage independently from the scoring algorithm and user interface logic (section~\ref{sec:backend-components}). \textbf{This requirement is fulfilled.}
-	            
-	\item \textbf{Scalability (\ref{nfr:scalability})}
-	            
-	      Scalability is achieved through efficient batch-processing of external data (e.g., \ac{EPSS} batch requests) and a scheduled refresh mechanism to handle growing data volumes and simultaneous user interactions without performance degradation (section~\ref{subsec:scheduled-refresh}). \textbf{This requirement is fulfilled.}
-	            
-	\item \textbf{Usability (\ref{nfr:usability})}
-	            
-	      The system provides a user-friendly interface featuring clear navigation, interactive decision trees, and comprehensive score explanations. Interactive components, such as tooltips and pre-filled links to external calculators, significantly enhance usability (section~\ref{sec:frontend-components}). \textbf{This requirement is fulfilled.}
-	      
-	\item \textbf{Compliance with External API Rate Limits (\ref{nfr:rate_limit_compliance})}
-	            
-    The implementation responsibly manages external API requests using caching and batching strategies, significantly reducing API calls and thus reducing rate-limit violations. (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
-	      
-	\item \textbf{Reliability and Error Handling (\ref{nfr:reliability_fallbacks})}
-	            
-	      Robust error handling mechanisms are implemented. For instance, when critical data (\ac{CVSS} or \ac{EPSS}) is missing, the system assigns a placeholder severity score of 10.1, prioritizing the vulnerability at the top and visually marking it as \enquote{UNKNOWN} to clearly communicate the issue (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
-	            
-	\item \textbf{Maintainability (\ref{nfr:maintainability})}
-	            
-	      The modular architecture and clear separation of backend layers (controller, service, data layers) enable straightforward maintenance and integration of future enhancements, such as additional data sources or scoring mechanisms (section~\ref{sec:backend-components} and section~\ref{sec:frontend-components}). \textbf{This requirement is fulfilled.}
+    
+    \item \textbf{Modularity (\ref{nfr:modularity})}
+	      	      
+    The system distinctly separates backend functionalities (such as data caching, scheduled tasks, and repositories) from frontend interactions, facilitating maintainability. For instance, the repository layer manages data storage independently from the scoring algorithm and user interface logic (section~\ref{sec:backend-components}). \textbf{This requirement is fulfilled.}
+	      	            
+    \item \textbf{Scalability (\ref{nfr:scalability})}
+	      	            
+    Scalability is achieved through efficient batch-processing of external data (e.g., \ac{EPSS} batch requests) and a scheduled refresh mechanism to handle growing data volumes and simultaneous user interactions without performance degradation (section~\ref{subsec:scheduled-refresh}). \textbf{This requirement is fulfilled.}
+	      	            
+    \item \textbf{Usability (\ref{nfr:usability})}
+	      	            
+    The system provides a user-friendly interface featuring clear navigation, interactive decision trees, and comprehensive score explanations. Interactive components, such as tooltips and pre-filled links to external calculators, significantly enhance usability (section~\ref{sec:frontend-components}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Compliance with External \ac{API} Rate Limits (\ref{nfr:rate_limit_compliance})}
+	      	            
+    The implementation responsibly manages external \ac{API} requests using caching and batching strategies, significantly reducing \ac{API} calls and thus reducing rate-limit violations. (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Reliability and Error Handling (\ref{nfr:reliability_fallbacks})}
+	      	            
+    Robust error handling mechanisms are implemented. For instance, when critical data (\ac{CVSS} or \ac{EPSS}) is missing, the system assigns a placeholder severity score of 10.1, prioritizing the vulnerability at the top and visually marking it as \enquote{UNKNOWN} to clearly communicate the issue (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
+	      	            
+    \item \textbf{Maintainability (\ref{nfr:maintainability})}
+	      	            
+    The modular architecture and clear separation of backend layers (controller, service, data layers) enable straightforward maintenance and integration of future enhancements, such as additional data sources or scoring mechanisms (section~\ref{sec:backend-components} and section~\ref{sec:frontend-components}). \textbf{This requirement is fulfilled.}
+    
 \end{enumerate}
+
+\section{Scientific Foundations of the Expert Questionnaire}
+
+\section{Evaluation of Models by Domain Experts}
 
 \section{Summary}
 
