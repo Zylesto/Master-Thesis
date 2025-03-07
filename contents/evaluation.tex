@@ -1,11 +1,9 @@
 \chapter{Evaluation}
 \label{sec:evaluation}
 
-This chapter evaluates the implemented system described in chapter~\ref{chapter:implementation} against the requirements defined in chapter~\ref{chapter:requirements}. Each requirement is checked and evaluated with concrete examples to determine whether it has been adequately addressed.
+This chapter evaluates the implemented system described in chapter~\ref{chapter:implementation} against the functional and non-functional requirements defined in chapter~\ref{chapter:requirements}, followed by an expert evaluation conducted through structured questionnaires to verify the system’s applicability and effectiveness.
 
-\section{Evaluation of Realization Against the Models}
-
-\subsection{Evaluation of Functional Requirements}
+\section{Evaluation of Functional Requirements}
 
 This section reviews each functional requirement, detailing how the implemented solution meets each criterion with specific examples.
 
@@ -65,7 +63,7 @@ This section reviews each functional requirement, detailing how the implemented 
 	      	      
 \end{enumerate}
 
-\subsection{Evaluation of Non-Functional Requirements}
+\section{Evaluation of Non-Functional Requirements}
 
 This section evaluates the non-functional requirements, emphasizing system quality, performance, and usability, and details how the implementation meets each requirement.
 
@@ -97,10 +95,116 @@ This section evaluates the non-functional requirements, emphasizing system quali
     
 \end{enumerate}
 
-\section{Scientific Foundations of the Expert Questionnaire}
-
 \section{Evaluation of Models by Domain Experts}
+
+To further validate the practical relevance of the implemented framework, an expert evaluation was performed. Three domain experts from the field of cybersecurity assessed the applicability, clarity, and effectiveness of the models and algorithms presented in chapter~\ref{chapter:multidimensional-vulnerability-classification}. The evaluation was conducted using structured questionnaires provided in Appendix~\ref{appendix:questionnaire} and builds on the scientific foundations outlined in %section~\ref{sec:scientific-foundations-questionnaire}.
+
+\subsection{Multi-Dimensional Classification Model}
+
+Experts provided valuable feedback regarding the integration of \ac{CVSS} and \ac{EPSS} scores into a single unified severity score. Expert feedback varied, with one expert explicitly stating: \enquote{I do not like merging CVSS and EPSS, as CVSS is already considered in EPSS according to page 2}. Another expert, however, emphasized the usefulness, stating: \enquote{The motivation to combine scores is clear and useful, although the selection of these two models specifically could be more clearly justified}.
+
+Regarding weighting, suggestions included \enquote{a 50:50 ratio, initially not favoring one over the other,} while another expert preferred a heavier weighting towards EPSS (70\%) due to its empirical nature.
+
+\newpage
+
+\textbf{Overall expert ratings (1 = very good, 6 = insufficient):}
+\\
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+    \hline
+    Expert & Rating \\
+    \hline
+    Expert 1 & 3 \\
+    Expert 2 & 1 \\
+    Expert 3 & 2 \\
+    \hline
+    \textbf{Average} & \textbf{2.0} \\
+    \hline
+\end{tabular}
+\caption{Overall expert ratings for the Multi-Dimensional Classification Model}
+\label{tab:expert_ratings_multidimensional}
+\end{table}
+
+\subsection{Algorithm to Compute Classification}
+
+The algorithm's handling of missing data through placeholder scores was generally perceived positively, although concerns were raised. One expert noted: \enquote{The chosen placeholder could be confusing due to its proximity to valid score ranges; using infinity or NaN might be clearer}. Another expert commented positively: \enquote{As long as it is clearly indicated, it should not confuse users}.
+
+Experts also identified instances where the computed severity might differ from organizational practices, such as vulnerabilities in unused library components without valid threat vectors.
+
+\textbf{Overall expert ratings (1 = very good, 6 = insufficient):}
+\\
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+    \hline
+    Expert & Rating \\
+    \hline
+    Expert 1 & 2 \\
+    Expert 2 & 2 \\
+    Expert 3 & 2 \\
+    \hline
+    \textbf{Average} & \textbf{1.67} \\
+    \hline
+\end{tabular}
+\caption{Expert ratings for the Algorithm to Compute Classification}
+\label{tab:expert_ratings_algorithm_classification}
+\end{table}
+
+\subsection{Remediation Model (SSVC-inspired)}
+
+Experts confirmed that the SSVC-inspired remediation model generally aligns with real-world practices but highlighted some deviations. One expert stated: \enquote{Criticality of the asset is always considered, regardless of exploit likelihood}. Another emphasized: \enquote{Even if the criticality is low, vulnerabilities must be monitored and patched, as a single flaw can become critical in an attack chain}.
+
+Decision factors identified as most critical by experts were \enquote{Exploit Likelihood and Asset Criticality, followed by Patch Availability}.
+
+\textbf{Overall expert ratings (1 = very good, 6 = insufficient):}
+\\
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+    \hline
+    Expert & Rating \\
+    \hline
+    Expert 1 & 2 \\
+    Expert 2 & 1 \\
+    Expert 3 & 2 \\
+    \hline
+    \textbf{Average} & \textbf{1.67} \\
+    \hline
+\end{tabular}
+\caption{Expert ratings for the Remediation Model (SSVC-inspired)}
+\label{tab:expert_ratings_remediation_ssvc}
+\end{table}
+
+\subsection{Rank-Ordering Mechanism}
+
+All experts agreed prioritizing vulnerabilities based on the highest scores or incomplete data matches standard practice. One expert suggested improvements: \enquote{Grouping vulnerabilities by technology stack or business unit might offer better practical usability}. Another proposed: \enquote{A second queue for unknown-data vulnerabilities could avoid blocking immediate mitigation tasks}.
+
+\textbf{Overall expert ratings (1 = very good, 6 = insufficient):}
+\\
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+    \hline
+    Expert & Rating \\
+    \hline
+    Expert 1 & 3 \\
+    Expert 2 & 1 \\
+    Expert 3 & 2 \\
+    \hline
+    \textbf{Average} & \textbf{2.0} \\
+    \hline
+\end{tabular}
+\caption{Expert ratings for the Rank-Ordering Mechanism}
+\label{tab:expert_ratings_rank_ordering}
+\end{table}
+
+\subsection{Overall Expert Feedback and Recommendations}
+
+Overall, the expert evaluation indicated that the integrated models effectively reflect common vulnerability management practices, providing useful mechanisms for classification, remediation, and prioritization. Experts highlighted the practicality and clear alignment with current industry approaches, with one expert noting explicitly: \enquote{These integrated models reflect well how we manage open-source vulnerabilities in practice.}
+
+Nevertheless, the evaluation identified areas for further improvement, particularly regarding clearer communication of placeholder scores, and the inclusion of compliance as a key cybersecurity driver: \enquote{Compliance is one of the drivers for cybersecurity and must always be considered.} Additionally, experts suggested more granular grouping or filtering by technology stack or business units to enhance the usability of the rank-ordering mechanism. These considerations represent potential avenues for future enhancements of the framework.
 
 \section{Summary}
 
-This evaluation demonstrates that the implemented system effectively fulfills all defined functional and non-functional requirements, supporting robust, scalable, and user-centric vulnerability management.
+This evaluation has demonstrated that the implemented system effectively meets all defined functional and non-functional requirements. The expert evaluation further validated the practical relevance and applicability of the multidimensional classification and remediation models, highlighting their alignment with common industry practices. Additionally, constructive feedback from domain experts identified opportunities for future enhancements, particularly concerning clearer communication of placeholder scores, improved grouping capabilities, and the integration of compliance considerations. Overall, the results confirm that the proposed solution provides a robust, scalable, and user-centric approach to vulnerability management.
