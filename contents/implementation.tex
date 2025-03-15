@@ -15,7 +15,7 @@ A central piece of functionality is the storage of previously retrieved data. Tw
 
 The \textbf{Pre-Check} strategy involves querying the internal repository whenever a vulnerability request arises. The system first checks whether a corresponding \textit{Vulnerability Data Entity} already exists. If it does, the existing record is returned. If no such entry is found, the system creates a new entity while simultaneously checking the local \ac{OSV} database for the associated \ac{CVSS} vector. If the vector is not available locally, an external \ac{API} call to the \ac{NVD} is performed to retrieve the missing details. In parallel, the \ac{EPSS} score is fetched from the external \texttt{first.org} \ac{API}, as it is not stored locally (see section~\ref{subsec:backend-responsibilities}).
 
-The \textbf{Scheduled Refresh} strategy ensures data freshness through a nightly update cycle. This process starts 30 minutes after the \ac{OSV} database update (see section ~\ref{sec:current-design}), ensuring that the most recent vulnerability information is available. During this cycle, the system updates the entire dataset by performing batch requests for \ac{EPSS} scores via the \texttt{first.org} \ac{API} and individual requests to the \ac{NVD} for missing \ac{CVSS} details not available in the local \ac{OSV} database, as the \ac{NVD} does not support batch queries for \ac{CVE} IDs \footnote{\url{https://nvd.nist.gov/developers/vulnerabilities}}.
+The \textbf{Scheduled Refresh} strategy ensures data freshness through a nightly update cycle. This process starts 30 minutes after the \ac{OSV} database update (see section ~\ref{sec:current-design}), ensuring that the most recent vulnerability information is available. During this cycle, the system updates the entire dataset by performing batch requests for \ac{EPSS} scores via the \texttt{first.org} \ac{API} and individual requests to the \ac{NVD} for missing \ac{CVSS} details not available in the local \ac{OSV} database, as the \ac{NVD} does not support batch queries for \ac{CVE} IDs.\footnote{\url{https://nvd.nist.gov/developers/vulnerabilities}}
 
 If either the \ac{CVSS} or \ac{EPSS} data cannot be retrieved, the system transitions to an \texttt{Error} state, returning a severity score of 10.1. This value is highlighted in pink on the frontend to prompt user action (see section~\ref{subsec:handling-missing-data}).
 
@@ -239,7 +239,7 @@ A \textit{Score Details} popup (as described in section \ref{subsec:ui-explainin
   \item \textbf{Button Trigger:} A button in the \enquote{Vulnerability Details} view opens a modal dialog.
   \item \textbf{Dialog Contents:} The modal includes fields for the \ac{CVE} ID, \ac{CVSS} 3.1 base score, vector string, \ac{EPSS} metric, and the final severity. If any fields are missing, placeholders (e.g., \texttt{N/A}) or a note about further actions that can be taken are shown.
   \item \textbf{Hover Tooltips for Vectors:} Displays hover-based tooltips for each \ac{CVSS} vector attribute. When the user places the cursor over a specific field (e.g., \enquote{Attack Vector} or \enquote{Attack Complexity}), a concise explanation appears to clarify its impact on the vulnerability assessment.
-  \item \textbf{Direct Link to the \ac{CVSS} Calculator:} Provides a direct link to the official \ac{CVSS} calculator \footnote{\url{https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator}}. This link is automatically populated with the relevant vector data, allowing users to quickly review the existing metrics and explore different scoring scenarios.
+  \item \textbf{Direct Link to the \ac{CVSS} Calculator:} Provides a direct link to the official \ac{CVSS} calculator.\footnote{\url{https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator}} This link is automatically populated with the relevant vector data, allowing users to quickly review the existing metrics and explore different scoring scenarios.
 \end{itemize}
 
 This functionality is illustrated in figure~\ref{fig:score-details}, which shows an example of the \textit{Score Details} popup.
@@ -261,12 +261,12 @@ The implementation takes the precalculated severity scores, which include contri
 
 For vulnerabilities with missing essential data, a placeholder score of \textbf{10.1} is assigned. This score exceeds the maximum valid severity of 10.0, ensuring these entries are sorted to the top of the list. In the user interface, such entries are highlighted with a pink \textbf{“UNKNOWN”} label, prompting users to investigate and resolve the missing information.
 
-An example of the sorted list, as displayed in the user interface, is shown in figure~\ref{fig:rank-order-example}.
+An example of the sorted list, as displayed in the user interface, is shown in figure~\ref{fig:rank-order-example}, where placeholder scores for missing data are indicated by a pink \enquote{UNKNOWN} label.
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.7]{resources/Rank-Order.PNG}
-    \caption{Example of a sorted list of vulnerabilities in descending order of severity. Placeholder scores for missing data are displayed with a pink “UNKNOWN” label.}
+    \caption{Example of a sorted list of vulnerabilities in descending order of severity.}
     \label{fig:rank-order-example}
 \end{figure}
 

@@ -57,10 +57,6 @@ This section reviews each functional requirement, detailing how the implemented 
 	      	      
     A nightly synchronization cycle updates vulnerability data. Batch retrieval of \ac{EPSS} data and individual queries to external databases (\ac{NVD}) ensure data freshness, clearly illustrated by the scheduled refresh mechanism (section~\ref{subsec:scheduled-refresh}). \textbf{This requirement is fulfilled.}
 	      	      
-    \item \textbf{Persistence of Remediation Decisions (\ref{req:ssvc_recommendation_persistence})}
-	      	      
-    Remediation decisions through the \ac{SSVC} recommendation endpoint are persistently stored. For instance, decisions such as \enquote{Apply patch immediately} are saved and retrievable (section~\ref{par:ssvc-recommendation-endpoint}). \textbf{This requirement is fulfilled.}
-	      	      
 \end{enumerate}
 
 \section{Evaluation of Non-Functional Requirements}
@@ -104,8 +100,6 @@ To further validate the practical relevance of the implemented framework, an exp
 Experts provided valuable feedback regarding the integration of \ac{CVSS} and \ac{EPSS} scores into a single unified severity score (see section \ref{sec:multi-dimensional-classification}). Expert feedback varied, with one expert explicitly stating: \enquote{I do not like merging \ac{CVSS} and \ac{EPSS}, as \ac{CVSS} is already considered in \ac{EPSS} according to page 2}. Another expert, however, emphasized the usefulness, stating: \enquote{The motivation to combine scores is clear and useful, although the selection of these two models specifically could be more clearly justified}.
 
 Regarding weighting, suggestions included \enquote{a 50:50 ratio, initially not favoring one over the other,} while another expert preferred a heavier weighting towards EPSS (70\%) due to its empirical nature.
-
-\newpage
 
 \textbf{Overall expert ratings (1 = very good, 6 = insufficient):}
 \\
