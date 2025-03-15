@@ -101,7 +101,7 @@ To further validate the practical relevance of the implemented framework, an exp
 
 \subsection{Multi-Dimensional Classification Model}
 
-Experts provided valuable feedback regarding the integration of \ac{CVSS} and \ac{EPSS} scores into a single unified severity score. Expert feedback varied, with one expert explicitly stating: \enquote{I do not like merging CVSS and EPSS, as CVSS is already considered in EPSS according to page 2}. Another expert, however, emphasized the usefulness, stating: \enquote{The motivation to combine scores is clear and useful, although the selection of these two models specifically could be more clearly justified}.
+Experts provided valuable feedback regarding the integration of \ac{CVSS} and \ac{EPSS} scores into a single unified severity score (see section \ref{sec:multi-dimensional-classification}). Expert feedback varied, with one expert explicitly stating: \enquote{I do not like merging \ac{CVSS} and \ac{EPSS}, as \ac{CVSS} is already considered in \ac{EPSS} according to page 2}. Another expert, however, emphasized the usefulness, stating: \enquote{The motivation to combine scores is clear and useful, although the selection of these two models specifically could be more clearly justified}.
 
 Regarding weighting, suggestions included \enquote{a 50:50 ratio, initially not favoring one over the other,} while another expert preferred a heavier weighting towards EPSS (70\%) due to its empirical nature.
 
@@ -128,7 +128,7 @@ Regarding weighting, suggestions included \enquote{a 50:50 ratio, initially not 
 
 \subsection{Algorithm to Compute Classification}
 
-The algorithm's handling of missing data through placeholder scores was generally perceived positively, although concerns were raised. One expert noted: \enquote{The chosen placeholder could be confusing due to its proximity to valid score ranges; using infinity or NaN might be clearer}. Another expert commented positively: \enquote{As long as it is clearly indicated, it should not confuse users}.
+The algorithm's (see section \ref{sec:algorithm-classifications})  handling of missing data through placeholder scores was generally perceived positively, although concerns were raised. One expert noted: \enquote{The chosen placeholder could be confusing due to its proximity to valid score ranges; using infinity or NaN might be clearer}. Another expert commented positively: \enquote{As long as it is clearly indicated, it should not confuse users}.
 
 Experts also identified instances where the computed severity might differ from organizational practices, such as vulnerabilities in unused library components without valid threat vectors.
 
@@ -151,9 +151,9 @@ Experts also identified instances where the computed severity might differ from 
 \label{tab:expert_ratings_algorithm_classification}
 \end{table}
 
-\subsection{Remediation Model (SSVC-inspired)}
+\subsection{Remediation Mechanism}
 
-Experts confirmed that the SSVC-inspired remediation model generally aligns with real-world practices but highlighted some deviations. One expert stated: \enquote{Criticality of the asset is always considered, regardless of exploit likelihood}. Another emphasized: \enquote{Even if the criticality is low, vulnerabilities must be monitored and patched, as a single flaw can become critical in an attack chain}.
+Experts confirmed that the \ac{SSVC}-inspired remediation model and algorithm (see sections \ref{sec:remediation_recommendation}, \ref{sec:algorithm-remediation}) generally aligns with real-world practices but highlighted some deviations. One expert stated: \enquote{Criticality of the asset is always considered, regardless of exploit likelihood}. Another emphasized: \enquote{Even if the criticality is low, vulnerabilities must be monitored and patched, as a single flaw can become critical in an attack chain}.
 
 Decision factors identified as most critical by experts were \enquote{Exploit Likelihood and Asset Criticality, followed by Patch Availability}.
 
@@ -172,13 +172,13 @@ Decision factors identified as most critical by experts were \enquote{Exploit Li
     \textbf{Average} & \textbf{1.67} \\
     \hline
 \end{tabular}
-\caption{Expert ratings for the Remediation Model (SSVC-inspired)}
+\caption{Expert ratings for the Remediation Model (\ac{SSVC}-inspired)}
 \label{tab:expert_ratings_remediation_ssvc}
 \end{table}
 
 \subsection{Rank-Ordering Mechanism}
 
-All experts agreed prioritizing vulnerabilities based on the highest scores or incomplete data matches standard practice. One expert suggested improvements: \enquote{Grouping vulnerabilities by technology stack or business unit might offer better practical usability}. Another proposed: \enquote{A second queue for unknown-data vulnerabilities could avoid blocking immediate mitigation tasks}.
+All experts agreed prioritizing vulnerabilities based on the highest scores or incomplete data (see section \ref{sec:rank-order-vulnerabilities}) matches standard practice. One expert suggested improvements: \enquote{Grouping vulnerabilities by technology stack or business unit might offer better practical usability}. Another proposed: \enquote{A second queue for unknown-data vulnerabilities could avoid blocking immediate mitigation tasks}.
 
 \textbf{Overall expert ratings (1 = very good, 6 = insufficient):}
 \\
@@ -200,10 +200,13 @@ All experts agreed prioritizing vulnerabilities based on the highest scores or i
 \end{table}
 
 \subsection{Overall Expert Feedback and Recommendations}
+\label{subsec:overall_expert_feedback_recommendations}
 
 Overall, the expert evaluation indicated that the integrated models effectively reflect common vulnerability management practices, providing useful mechanisms for classification, remediation, and prioritization. Experts highlighted the practicality and clear alignment with current industry approaches, with one expert noting explicitly: \enquote{These integrated models reflect well how we manage open-source vulnerabilities in practice.}
 
 Nevertheless, the evaluation identified areas for further improvement, particularly regarding clearer communication of placeholder scores, and the inclusion of compliance as a key cybersecurity driver: \enquote{Compliance is one of the drivers for cybersecurity and must always be considered.} Additionally, experts suggested more granular grouping or filtering by technology stack or business units to enhance the usability of the rank-ordering mechanism. These considerations represent potential avenues for future enhancements of the framework.
+
+Despite varying recommendations on weighting between \ac{CVSS} and \ac{EPSS}, this work adopts a weighting factor of 2 for \ac{EPSS}. This choice deliberately emphasizes empirical exploit probability, aligning with recent studies highlighting \ac{EPSS}'s strength in predicting real-world exploitation \autocite{jacobs_exploit_2021, first_epss_2021}.
 
 \section{Summary}
 

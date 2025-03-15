@@ -1,10 +1,10 @@
-\chapter{Architecture}
-\label{chapter:architecture}
+\chapter{Design}
+\label{chapter:design}
 
-This chapter describes the current and proposed architectures for managing vulnerability data, emphasizing modularity, scalability, and efficient interaction between system components. Building on the multi-dimensional classification and remediation model outlined in chapter \ref{chapter:multidimensional-vulnerability-classification}, the proposed extended architecture translates these concepts into a scalable and practical system design.
+This chapter describes the current and proposed designs for managing vulnerability data, emphasizing scalability and efficient interaction between system components. Building on the multidimensional classification and remediation model outlined in chapter \ref{chapter:multidimensional-vulnerability-classification}, the proposed extension translates these concepts into a scalable and practical system design.
 
-\section{Current Architecture}
-\label{sec:current-architecture}
+\section{Current Design}
+\label{sec:current-design}
 
 The current solution integrates data from the \ac{OSV} database into the internal system for vulnerability management. The process ensures efficient synchronization, processing, and storage of vulnerability advisories, aligning them with components defined in software bill of materials (\ac{SBOM}) to identify affected packages and components with vulnerabilities.
 
@@ -22,10 +22,10 @@ The current solution integrates data from the \ac{OSV} database into the interna
     \item \textbf{Database Update:} The structured advisories, enriched with mappings to specific components, are stored in the internal database. Synchronization metadata, such as timestamps and version identifiers, is updated to reflect the latest state of external data sources. When an \ac{API} request is triggered, the relevant data is sent to the frontend, ensuring the user interface is always in sync with the most recent vulnerability information.
 \end{itemize}
 
-\section{Extended Architecture}
-\label{sec:extended-architecture}
+\section{Extended Design}
+\label{sec:extended-design}
 
-This design centers on a streamlined approach to vulnerability information management. It integrates multiple data sources (e.g., vulnerability databases, scoring providers) and applies caching to reduce unnecessary network requests. Its purpose is to unify critical metrics (such as \ac{CVSS}, \ac{EPSS}) into a consolidated view, as described in the multi-dimensional classification model (see section \ref{sec:multi-dimensional-classification}), while also supporting role-specific actions based on the remediation model outlined in section \ref{sec:remediation_recommendation}.
+The extended design centers on a streamlined approach to vulnerability information management. It integrates multiple data sources (e.g., vulnerability databases, scoring providers) and applies caching to reduce unnecessary network requests. Its purpose is to unify critical metrics (such as \ac{CVSS}, \ac{EPSS}) into a consolidated view, as described in the multi-dimensional classification model (see section \ref{sec:multi-dimensional-classification}), while also supporting role-specific actions based on the remediation model outlined in section \ref{sec:remediation_recommendation}.
 
 \subsection{Backend Responsibilities}
 \label{subsec:backend-responsibilities}
@@ -71,7 +71,7 @@ Failure in either fetch leads to the \texttt{Error} state, while successful retr
 \subsection{Rate Limits and Caching Benefits}
 \label{subsec:rate-limits-caching}
 
-External data sources, such as the \ac{NVD} and the \texttt{first.org} database, impose rate limits to protect against misuse. In this architecture, \ac{CVE} data is exclusively retrieved from the local \ac{OSV} database, while \ac{CVSS} data is primarily obtained from the local \ac{OSV} database as well, querying the \ac{NVD} only if the required \ac{CVSS} information is unavailable locally. Additionally, \ac{EPSS} data is fetched directly from \texttt{first.org}. For instance, the \ac{NVD} restricts queries to five requests per 30-second window without an \ac{API} key, and fifty when using one \footnote{\url{https://nvd.nist.gov/developers/start-here}}. Meanwhile, the \texttt{first.org} database enforces a threshold of 1,000 requests per hour without a token \footnote{\url{https://api.first.org/\#Rate-Limit}}. Since \ac{CVE} data is retrieved locally from the \ac{OSV} database, no rate limits apply.
+External data sources, such as the \ac{NVD} and the \texttt{first.org} database, impose rate limits to protect against misuse. In this design, \ac{CVE} data is exclusively retrieved from the local \ac{OSV} database, while \ac{CVSS} data is primarily obtained from the local \ac{OSV} database as well, querying the \ac{NVD} only if the required \ac{CVSS} information is unavailable locally. Additionally, \ac{EPSS} data is fetched directly from \texttt{first.org}. For instance, the \ac{NVD} restricts queries to five requests per 30-second window without an \ac{API} key, and fifty when using one \footnote{\url{https://nvd.nist.gov/developers/start-here}}. Meanwhile, the \texttt{first.org} database enforces a threshold of 1,000 requests per hour without a token \footnote{\url{https://api.first.org/\#Rate-Limit}}. Since \ac{CVE} data is retrieved locally from the \ac{OSV} database, no rate limits apply.
 
 To cope with these constraints, the backend employs caching and batching to reduce repetitive lookups. Data retrieval occurs only when a record is missing or considered outdated, significantly minimizing external calls and reducing the risk of exceeding rate limits. During nightly updates, requests for \ac{EPSS} scores are processed in batches to further optimize efficiency. However, since the \ac{NVD} does not support batch queries for \ac{CVE} IDs \footnote{\url{https://nvd.nist.gov/developers/vulnerabilities}}, \ac{CVSS} data retrieval requires individual requests, making caching even more essential. Consequently, the system operates more reliably and gracefully handles errors by returning a severity score of 10.1 (see section~\ref{subsec:handling-missing-data}) whenever fetch errors occur. This condition is visually highlighted in pink on the frontend, prompting users to consult the score explanation interface (see section~\ref{subsec:ui-explaining-score}) to identify appropriate next steps for issue resolution.
 
@@ -111,20 +111,10 @@ The \ac{SSVC} process involves tailoring vulnerability handling to each user's o
 
 \end{tikzpicture}
 }
-\caption{High-level interaction in the SSVC process.}
+\caption{High-level interaction in the \ac{SSVC} process.}
 \label{fig:ssvc-interaction}
 \end{figure}
 
-\section{Design Principles}
-\label{sec:design-principles}
-
-\begin{itemize}
-    \item \textbf{Modularity:} Separate retrieval, caching, scoring, and role-based recommendation processes, allowing each to be maintained independently.
-    \item \textbf{Scalability:} Implement nightly batch updates (when possible) and caching to efficiently manage increasing vulnerability volumes and high \ac{API} traffic.
-    \item \textbf{Usability:} Provide a clear sequence for role-based input, ensuring that developers or security advisors receive context-specific guidance without being overwhelmed by unrelated details.
-    \item \textbf{Consistency:} Apply uniform approaches to caching and scoring so that users have a predictable view of vulnerability metrics, regardless of the used data source.
-\end{itemize}
-
 \section{Conclusion}
-\label{sec:architecture-conclusion}
-The outlined architecture consolidates key vulnerability metrics and merges them with role-based inputs to yield tailored recommendations. By systematically checking internal data first and fetching new information only when required, it minimizes redundant requests while maintaining data accuracy. Frontend interactions are kept straightforward through specialized dialogs and status views, ensuring users can easily view or update vulnerability details. This approach offers a strong foundation for integrating further data sources and scaling to large application ecosystems.
+\label{sec:design-conclusion}
+The outlined design consolidates key vulnerability metrics and merges them with role-based inputs to yield tailored recommendations. By systematically checking internal data first and fetching new information only when required, it minimizes redundant requests while maintaining data accuracy. Frontend interactions are kept straightforward through specialized dialogs and status views, ensuring users can easily view or update vulnerability details. This approach offers a strong foundation for integrating further data sources and scaling to large application ecosystems.

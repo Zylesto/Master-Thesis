@@ -31,7 +31,7 @@ These dimensions form the foundation of the classification model used to evaluat
 \section{Algorithm for Computing Classifications}
 \label{sec:algorithm-classifications}
 
-The classification algorithm prioritizes vulnerabilities by combining these dimensions, resulting in a tailored severity score that reflects both technical severity and real-world implications.
+The classification algorithm prioritizes vulnerabilities by combining these dimensions, resulting in a tailored severity score that reflects both technical severity and real-world implications:
 
 \begin{enumerate}
     \item \textit{Input Retrieval:} Gather data for each vulnerability, including \ac{CVSS} and \ac{EPSS} scores.
@@ -56,13 +56,7 @@ The classification algorithm prioritizes vulnerabilities by combining these dime
 \subsection{Data Sources for the Classification Model}
 \label{subsec:classification-data-sources}
 
-The model integrates data from multiple sources to provide comprehensive information for each dimension:
-
-\begin{itemize}
-    \item \ac{CVE} ID, \ac{CVSS} Score, and \ac{EPSS} Score:
-    Sourced from databases such as the \ac{NVD}, \ac{OSV}, \textit{first.org}, and \ac{GAD}.
-    The \ac{CVE} identifier provides a standardized reference for the vulnerability, while \ac{CVSS} and \ac{EPSS} offer insights into technical severity and exploitation likelihood, respectively.
-\end{itemize}
+The model integrates data from multiple sources to comprehensively evaluate vulnerabilities. Each vulnerability is referenced through a standardized \ac{CVE} identifier, facilitating consistent data retrieval. This identifier is supplemented by metrics from \ac{CVSS} and \ac{EPSS}, which provide insights into technical severity and exploitation likelihood, respectively. The primary data sources include the \ac{NVD}, \ac{OSV}, \ac{GAD}, and the \texttt{first.org} EPSS database.
 
 \subsection{Handling Of Missing Data}
 \label{subsec:handling-missing-data}
@@ -74,8 +68,7 @@ If the data required for calculating the severity score (see section \ref{sec:al
 
 To enhance the user’s understanding of the vulnerability scoring and prioritization, the system includes an interactive explanation feature and a method for handling incomplete data:
 
-\begin{itemize}
-    \item \textbf{Score Details Button:} The "Show Score-Details" button in the user interface provides detailed information about the calculated score. When clicked, it displays the following details:
+\textbf{Score Details Button:} The "Show Score-Details" button in the user interface provides detailed information about the calculated score. When clicked, it displays the following details:
     \begin{itemize}
         \item \textbf{\ac{CVE} ID:} Shows the \textit{Common Vulnerabilities and Exposures ID}, a unique identifier for the vulnerability. It helps security professionals track and reference the issue across different platforms and databases.
         \item \textbf{\ac{CVSS} Score (v3.1):} Displays the \textit{Common Vulnerability Scoring System} score, representing the severity of the vulnerability on a scale from 0.0 to 10.0. Higher scores indicate more critical vulnerabilities.
@@ -87,16 +80,10 @@ To enhance the user’s understanding of the vulnerability scoring and prioritiz
         \item \textbf{Direct Link to the CVSS Calculator:}  
         A direct link to a prefilled \textit{\ac{CVSS}} calculator, ensuring that users can quickly review the existing \textit{\ac{CVSS}} metrics. This link is automatically populated with the relevant vector data, allowing rapid exploration of different scoring scenarios.
     \end{itemize}
-\end{itemize}
 
 \textbf{Guidance in Case Of Missing Data:}
 \label{guidance-missing-data}
-For cases where specific scores or recommendations are unavailable, the system uses the following approach:
-\begin{itemize}
-    \item \textit{Indicate Missing Components:} If critical data such as the severity score is unavailable, the interface displays a red warning message stating:  
-    \textit{“Cannot compute: missing \ac{EPSS} or \ac{CVSS} Score! Remediation Strategy: Please run the \ac{SSVC} Assignment for further instructions!”}  
-    Additionally, the score details section may show placeholders like “\ac{CVSS}: N/A” to inform users that certain information was not included in the score calculation, thus ensuring transparency.
-\end{itemize}
+For cases where specific scores or recommendations are unavailable, the system transparently indicates missing components to the user. If critical data, such as the severity score, cannot be computed due to missing \ac{EPSS} or \ac{CVSS} scores, the user interface displays a clear red warning message stating: \textit{"Cannot compute: missing \ac{EPSS} or \ac{CVSS} Score! Remediation Strategy: Please run the \ac{SSVC} Assignment for further instructions!"} Additionally, the score details section may show placeholders like “\ac{CVSS}: N/A” to inform users that certain information was not included in the score calculation, thus ensuring transparency.
 
 This approach ensures that users are fully informed about how each vulnerability score is calculated, providing transparency and clarity. Additionally, handling missing data with fallback messages maintains consistency in user experience and supports informed decision-making, even when data is incomplete.
 
