@@ -1,0 +1,72 @@
+\chapter{Requirements}
+\label{chapter:requirements}
+
+This chapter defines the requirements for the multidimensional vulnerability classification and remediation system developed in the context of this master's thesis. Requirements are clearly structured and categorized into functional and non-functional requirements.
+
+\section{Functional Requirements}
+The functional requirements specify the necessary capabilities and behaviors the system must deliver to users.
+
+\begin{enumerate}
+	
+	\item \label{req:multidimensional_classification}
+	    \textbf{Multidimensional Vulnerability Classification Model:} The system shall provide a model capable of classifying vulnerabilities across multiple relevant dimensions, considering technical and empirical factors.
+	      
+	\item \label{req:classification_algorithm}
+	      \textbf{Algorithm for Computing Vulnerability Classifications:} The system shall include an algorithm that computes a severity classification for vulnerabilities based on relevant and available data sources.
+	      
+	\item \label{req:remediation_algorithm}
+	      \textbf{Remediation Recommendation Algorithm:} The system shall provide an algorithm to generate tailored recommendations for vulnerability remediation, taking into account factors such as stakeholder roles, asset importance, and patch availability.
+	      
+	\item \label{req:vulnerability_ranking_model}
+	      \textbf{Rank-Ordering Model for Vulnerabilities:} The system shall provide a ranking model that prioritizes vulnerabilities according to their calculated severity, ensuring critical vulnerabilities receive immediate attention.
+	      
+	\item \label{req:interactive_explanation}
+	      \textbf{Interactive Score Explanation Interface:} The system's user interface shall offer an interactive component that clearly explains how each vulnerability's overall severity was determined from underlying metrics.
+	      
+	\item \label{req:missing_data_handling}
+	      \textbf{Handling of Missing Vulnerability Data:} When critical data required for scoring is unavailable, the system shall assign a placeholder score and clearly mark such vulnerabilities as having unknown severity.
+	      
+	\item \label{req:frontend_warning_missing_data}
+	      \textbf{User Interface Warning for Missing Data:} The system shall explicitly inform users via the interface when necessary data is missing.
+	      
+	\item \label{req:ssvc_decision_tree}
+	      \textbf{Role-Based Decision Trees for Remediation:} The system shall incorporate structured decision trees to provide customized remediation recommendations tailored to different stakeholder roles.
+	      
+	\item \label{req:role_specific_recommendations}
+	      \textbf{Role-Specific Recommendations:} The system shall support various stakeholder roles, such as developers and security coordinators, by providing recommendations relevant to their specific responsibilities.
+	      
+	\item \label{req:data_caching_mechanism}
+	      \textbf{Caching Mechanism for External Data:} The system shall implement caching for external vulnerability data to reduce unnecessary network requests and ensure efficient data retrieval.
+	      
+	\item \label{req:data_synchronization}
+	      \textbf{Regular Data Synchronization:} The system shall perform regular synchronization with external vulnerability databases, maintaining updated and accurate vulnerability information.
+	      
+\end{enumerate}
+
+\section{Non-Functional Requirements}
+The non-functional requirements define quality criteria, constraints, and operational guidelines that the system must fulfill.
+
+\begin{enumerate}
+	
+	\item \label{nfr:modularity}
+	      \textbf{Modularity:} The system architecture shall be modular, distinctly separating functions such as data management, scoring computation, caching, and interface interaction to enhance maintainability.
+	      
+	\item \label{nfr:scalability}
+	      \textbf{Scalability:} The system must be scalable to accommodate increased data volumes and user interactions without performance degradation.
+	      
+	\item \label{nfr:usability}
+	      \textbf{Usability:} The user interface shall be intuitive, user-friendly, and provide clear guidance to ensure efficient and effective user interaction.
+	      
+	\item \label{nfr:rate_limit_compliance}
+	      \textbf{Compliance with External API Rate Limits:} The system must manage external API requests responsibly, using strategies such as batching and caching to comply with rate limits and handle errors gracefully.
+	      
+	\item \label{nfr:reliability_fallbacks}
+	      \textbf{Reliability and Error Handling:} Robust error handling mechanisms shall be implemented to maintain reliable system operation and clearly communicate any issues or missing information to users.
+	      
+	\item \label{nfr:maintainability}
+	      \textbf{Maintainability:} The system design shall follow clear separation of concerns, facilitating straightforward modifications, updates, or integration of additional functionalities.
+	      
+\end{enumerate}
+
+The functional and non-functional requirements presented in this chapter collectively define the essential attributes and capabilities necessary to build a robust and effective system for vulnerability management, emphasizing key aspects such as modularity, scalability, usability, and transparency.
+

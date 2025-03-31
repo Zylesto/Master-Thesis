@@ -1,0 +1,26 @@
+\chapter{Conclusion and Outlook}
+\label{chapter:conclusion-outlook}
+
+This chapter summarizes the contributions and findings of the thesis, highlighting its significance and limitations. Additionally, it outlines potential avenues for future research that could further enhance the proposed multidimensional vulnerability management framework.
+
+\section{Conclusion}
+This thesis proposed a multidimensional framework for the classification and remediation of vulnerabilities, aimed at addressing identified shortcomings within the existing vulnerability management component of \ac{SCA} Tool developed by the \ac{OSS} group at \ac{FAU}. The existing approach, which relies exclusively on the \ac{CVSS}, exhibits notable limitations, particularly inconsistencies among security practitioners' scoring and a lack of empirical exploitation data \autocite{spring_time_2021}. To overcome these limitations, the proposed framework integrates technical severity metrics from \ac{CVSS} with empirical exploit probability data provided by \ac{EPSS}, thus offering a more holistic and context-aware method for vulnerability prioritization.
+
+An evaluation against functional and non-functional requirements demonstrated that the proposed framework conceptually addresses all stated criteria, showing strong potential in enhancing vulnerability prioritization and remediation processes. Moreover, an expert evaluation confirmed the framework's practical relevance and its alignment with current industry standards and best practices. Experts highlighted particularly the advantage of integrating empirical exploitability measures alongside structured, stakeholder-specific remediation decision processes based on the \ac{SSVC} framework.
+
+However, the evaluation also revealed areas for further refinement. The method of combining \ac{CVSS} and \ac{EPSS} metrics elicited differing perspectives, with some experts noting conceptual overlaps that could potentially complicate interpretation. Additionally, the explicit integration of compliance aspects was recommended as a crucial extension to ensure alignment with organizational cybersecurity strategies.
+
+In summary, the thesis conceptually advanced vulnerability management methodologies by proposing a comprehensive multidimensional classification and remediation framework. Its validation by domain experts underscores its potential effectiveness and practical applicability, while also highlighting avenues for further improvement.
+
+\section{Outlook}
+Several avenues for future research emerge from the presented framework and its evaluation:
+
+\paragraph{Evaluation Against Ground Truth Data} An important next step would be the empirical validation of the proposed classification framework against ground truth data. Evaluating the proposed model against datasets containing historically verified cases of exploited vulnerabilities would provide a robust empirical foundation for assessing the predictive accuracy and reliability of the integrated \ac{CVSS} and \ac{EPSS} classification approach.
+
+\paragraph{Explicit Incorporation of Compliance Considerations}
+Integrating \\ compliance-driven factors, such as adherence to standards like \ac{GDPR} or ISO 27001, into the vulnerability assessment and prioritization model would ensure a more holistic and strategically aligned approach. \ac{GDPR} imposes strict regulatory obligations on organizations within the \ac{EU} to protect personal data \autocite{chassang_impact_2017}. Therefore, future research could explore explicitly identifying and prioritizing vulnerabilities affecting systems that process sensitive personal data, aligning vulnerability management more closely with these regulatory requirements. Similarly, the ISO 27001 standard provides a systematic framework for assessing and managing information security risks, including regular evaluation and prioritization of business-critical assets \autocite{international_organization_for_standardization_iso_isoiec_2018}. Integrating ISO 27001 risk assessments into the proposed vulnerability classification framework would ensure that vulnerabilities affecting high-risk assets, as defined by organizational security policies, receive higher prioritization. Consequently, this explicit incorporation of compliance considerations would enhance the alignment between technical vulnerability management and broader organizational information security and regulatory strategies.
+
+\paragraph{Advanced Grouping and Filtering Capabilities}
+Lastly, introducing more granular grouping and filtering functionalities - such as by business units, technology stacks, or organizational responsibilities - could significantly enhance the practical usability of the framework. This would allow organizations to tailor vulnerability management more precisely to their specific operational contexts and strategic priorities.
+
+These suggested research directions would contribute to refining the conceptual framework, ultimately fostering more effective and strategically aligned approaches to vulnerability classification and remediation.

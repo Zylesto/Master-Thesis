@@ -1,0 +1,208 @@
+\chapter{Evaluation}
+\label{sec:evaluation}
+
+This chapter evaluates the implemented system described in chapter~\ref{chapter:implementation} against the functional and non-functional requirements defined in chapter~\ref{chapter:requirements}, followed by an expert evaluation conducted through structured questionnaires to verify the system’s applicability and effectiveness.
+
+\section{Evaluation of Functional Requirements}
+
+This section reviews each functional requirement, detailing how the implemented solution meets each criterion with specific examples.
+
+\begin{enumerate}
+			
+    \item \textbf{Multidimensional Vulnerability Classification Model (\ref{req:multidimensional_classification})}
+    
+    The implementation provides a multidimensional vulnerability classification by combining multiple vulnerability metrics into a unified severity score. For example, as described in section~\ref{subsec:severity-score}, \ac{CVSS} and \ac{EPSS} metrics are combined to produce an actionable severity rating. \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Algorithm for Computing Vulnerability Classifications (\ref{req:classification_algorithm})}
+    
+    The implemented classification algorithm calculates severity scores using available metrics (section~\ref{subsec:severity-score}). This includes combining a weighted \ac{CVSS} score with a weighted \ac{EPSS} score to provide a clear and precise classification. \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Remediation Recommendation Algorithm (\ref{req:remediation_algorithm})}
+    
+    The system generates tailored remediation recommendations using structured decision trees based on stakeholder roles, asset criticality, and patch availability (section~\ref{subsec:ssvc-integration}). For instance, a developer is provided recommendations like \enquote{Apply vendor patch immediately} if available or \enquote{Develop a custom mitigation} otherwise. \textbf{This requirement is fulfilled.}
+	      
+    \newpage
+	                
+    \item \textbf{Rank-Ordering Model for Vulnerabilities (\ref{req:vulnerability_ranking_model})}
+    
+    Vulnerabilities are ranked by their calculated severity, prioritizing the most critical vulnerabilities at the top (section~\ref{sec:ranking-implementation}). For example, vulnerabilities with higher computed severity scores appear prominently. \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Interactive Score Explanation Interface (\ref{req:interactive_explanation})}
+    
+    The \enquote{Show Score Details} interface displays comprehensive vulnerability information, including \ac{CVE} identifiers, metrics, and an interactive, pre-filled link to the official \ac{CVSS} calculator. Interactive tooltips offer detailed explanations for terms like \enquote{Attack Vector} (section~\ref{sec:frontend-components}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Handling of Missing Vulnerability Data (\ref{req:missing_data_handling})}
+    
+    When critical data is missing, the system assigns a placeholder severity score of 10.1, prioritizing the vulnerability at the top and visually highlighting it in pink with the label \enquote{UNKNOWN}. This prompts users to address incomplete data entries (section~\ref{sec:ranking-implementation}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{User Interface Warning for Missing Data (\ref{req:frontend_warning_missing_data})}
+	      	      
+    The user interface explicitly alerts users to missing data by highlighting vulnerabilities with a pink \enquote{UNKNOWN} label, communicating the need for immediate corrective actions (section~\ref{sec:ranking-implementation}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Role-Based Decision Trees for Remediation (\ref{req:ssvc_decision_tree})}
+	      	      
+    Interactive decision trees guide stakeholders through remediation options tailored to context. For instance, developers answering questions about patch availability and asset criticality receive actionable steps like immediate patching or monitoring (section~\ref{subsec:ssvc-integration}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Role-Specific Recommendations (\ref{req:role_specific_recommendations})}
+	      	      
+    The system provides explicit role-specific recommendations. Developers receive instructions such as \enquote{Apply patch immediately} (section~\ref{subsec:ssvc-integration}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Caching Mechanism for External Data (\ref{req:data_caching_mechanism})}
+	      	      
+    Robust caching mechanisms significantly reduce external data retrieval. For instance, the system caches \ac{CVSS} vectors locally and performs efficient batch retrieval of \ac{EPSS} data (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
+	      
+    \newpage
+	      
+    \item \textbf{Regular Data Synchronization (\ref{req:data_synchronization})}
+	      	      
+    A nightly synchronization cycle updates vulnerability data. Batch retrieval of \ac{EPSS} data and individual queries to external databases (\ac{NVD}) ensure data freshness, clearly illustrated by the scheduled refresh mechanism (section~\ref{subsec:scheduled-refresh}). \textbf{This requirement is fulfilled.}
+	      	      
+\end{enumerate}
+
+\section{Evaluation of Non-Functional Requirements}
+
+This section evaluates the non-functional requirements, emphasizing system quality, performance, and usability, and details how the implementation meets each requirement.
+
+\begin{enumerate}
+    
+    \item \textbf{Modularity (\ref{nfr:modularity})}
+	      	      
+    The system distinctly separates backend functionalities (such as data caching, scheduled tasks, and repositories) from frontend interactions, facilitating maintainability. For instance, the repository layer manages data storage independently from the scoring algorithm and user interface logic (section~\ref{sec:backend-components}). \textbf{This requirement is fulfilled.}
+	      	            
+    \item \textbf{Scalability (\ref{nfr:scalability})}
+	      	            
+    Scalability is achieved through efficient batch-processing of external data (e.g., \ac{EPSS} batch requests) and a scheduled refresh mechanism to handle growing data volumes and simultaneous user interactions without performance degradation (section~\ref{subsec:scheduled-refresh}). \textbf{This requirement is fulfilled.}
+	      	            
+    \item \textbf{Usability (\ref{nfr:usability})}
+	      	            
+    The system provides a user-friendly interface featuring clear navigation, interactive decision trees, and comprehensive score explanations. Interactive components, such as tooltips and pre-filled links to external calculators, significantly enhance usability (section~\ref{sec:frontend-components}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Compliance with External \ac{API} Rate Limits (\ref{nfr:rate_limit_compliance})}
+	      	            
+    The implementation responsibly manages external \ac{API} requests using caching and batching strategies, significantly reducing \ac{API} calls and thus reducing rate-limit violations. (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
+	      	      
+    \item \textbf{Reliability and Error Handling (\ref{nfr:reliability_fallbacks})}
+	      	            
+    Robust error handling mechanisms are implemented. For instance, when critical data (\ac{CVSS} or \ac{EPSS}) is missing, the system assigns a placeholder severity score of \textbf{10.1}, prioritizing the vulnerability at the top and visually marking it as \enquote{UNKNOWN} to clearly communicate the issue (section~\ref{subsec:caching-repository}). \textbf{This requirement is fulfilled.}
+	      	            
+    \item \textbf{Maintainability (\ref{nfr:maintainability})}
+	      	            
+    The modular architecture and clear separation of backend layers (controller, service, data layers) enable straightforward maintenance and integration of future enhancements, such as additional data sources or scoring mechanisms (section~\ref{sec:backend-components} and section~\ref{sec:frontend-components}). \textbf{This requirement is fulfilled.}
+    
+\end{enumerate}
+
+\section{Evaluation of Models by Domain Experts}
+
+To further validate the practical relevance of the implemented framework, an expert evaluation was performed. Three domain experts from the field of cybersecurity assessed the applicability, clarity, and effectiveness of the models and algorithms presented in chapter~\ref{chapter:multidimensional-vulnerability-classification}. The evaluation was conducted using structured questionnaires provided in Appendix~\ref{appendix:questionnaire} and builds on the scientific foundations outlined in section~\ref{sec:scientific-foundations-questionnaire}.
+\textit{Note: Expert statements have been partially paraphrased for clarity and brevity, while ensuring the original meaning was preserved.}
+
+\subsection{Multi-Dimensional Classification Model}
+
+Experts provided valuable feedback regarding the integration of \ac{CVSS} and \ac{EPSS} scores into a single unified severity score (see section \ref{sec:multi-dimensional-classification}). Expert feedback varied, with one expert explicitly stating: \enquote{I do not like merging \ac{CVSS} and \ac{EPSS}, as \ac{CVSS} is already considered in \ac{EPSS} according to page 2}. Another expert, however, emphasized the usefulness, stating: \enquote{The motivation to combine scores is clear and useful, although the selection of these two models specifically could be more clearly justified}.
+
+Regarding weighting, suggestions included \enquote{a 50:50 ratio, initially not favoring one over the other,} while another expert preferred a heavier weighting towards EPSS (70\%) due to its empirical nature.
+
+\textbf{Overall expert ratings (1 = very good, 6 = insufficient):}
+\\
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+    \hline
+    Expert & Rating \\
+    \hline
+    Expert 1 & 3 \\
+    Expert 2 & 1 \\
+    Expert 3 & 2 \\
+    \hline
+    \textbf{Average} & \textbf{2.0} \\
+    \hline
+\end{tabular}
+\caption{Expert ratings for the Multi-Dimensional Classification Model}
+\label{tab:expert_ratings_multidimensional}
+\end{table}
+
+\subsection{Algorithm to Compute Classification}
+
+The algorithm's (see section \ref{sec:algorithm-classifications})  handling of missing data through placeholder scores was generally perceived positively, although concerns were raised. One expert noted: \enquote{The chosen placeholder could be confusing due to its proximity to valid score ranges; using infinity or NaN might be clearer}. Another expert commented positively: \enquote{As long as it is clearly indicated, it should not confuse users}.
+
+Experts also identified instances where the computed severity might differ from organizational practices, such as vulnerabilities in unused library components without valid threat vectors.
+
+\textbf{Overall expert ratings (1 = very good, 6 = insufficient):}
+\\
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+    \hline
+    Expert & Rating \\
+    \hline
+    Expert 1 & 2 \\
+    Expert 2 & 1 \\
+    Expert 3 & 1 \\
+    \hline
+    \textbf{Average} & \textbf{1.33} \\
+    \hline
+\end{tabular}
+\caption{Expert ratings for the Algorithm to Compute Classification}
+\label{tab:expert_ratings_algorithm_classification}
+\end{table}
+
+\subsection{Remediation Mechanism}
+
+Experts confirmed that the \ac{SSVC}-inspired remediation model and algorithm (see sections \ref{sec:remediation_recommendation}, \ref{sec:algorithm-remediation}) generally aligns with real-world practices but highlighted some deviations. One expert stated: \enquote{Criticality of the asset is always considered, regardless of exploit likelihood}. Another emphasized: \enquote{Even if the criticality is low, vulnerabilities must be monitored and patched, as a single flaw can become critical in an attack chain}.
+
+Decision factors identified as most critical by experts were \enquote{Exploit Likelihood and Asset Criticality, followed by Patch Availability}.
+
+\textbf{Overall expert ratings (1 = very good, 6 = insufficient):}
+\\
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+    \hline
+    Expert & Rating \\
+    \hline
+    Expert 1 & 2 \\
+    Expert 2 & 1 \\
+    Expert 3 & 2 \\
+    \hline
+    \textbf{Average} & \textbf{1.67} \\
+    \hline
+\end{tabular}
+\caption{Expert ratings for the Remediation Model (\ac{SSVC}-inspired)}
+\label{tab:expert_ratings_remediation_ssvc}
+\end{table}
+
+\subsection{Rank-Ordering Mechanism}
+
+All experts agreed prioritizing vulnerabilities based on the highest scores or incomplete data (see section \ref{sec:rank-order-vulnerabilities}) matches standard practice. One expert suggested improvements: \enquote{Grouping vulnerabilities by technology stack or business unit might offer better practical usability}. Another proposed: \enquote{A second queue for unknown-data vulnerabilities could avoid blocking immediate mitigation tasks}.
+
+Experts also suggested further grouping based on the type of vulnerability: \enquote{Software flaws need to be sorted and categorized by cyber hygiene (e.g., misconfigurations), compliance (driven by regulations), quality (software 'convenience' patches), and security (software patches that fix vulnerabilities). All flaws need to be entered in a ticketing system and traced until solved}.
+
+\textbf{Overall expert ratings (1 = very good, 6 = insufficient):}
+\\
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+    \hline
+    Expert & Rating \\
+    \hline
+    Expert 1 & 3 \\
+    Expert 2 & 1 \\
+    Expert 3 & 2 \\
+    \hline
+    \textbf{Average} & \textbf{2.0} \\
+    \hline
+\end{tabular}
+\caption{Expert ratings for the Rank-Ordering Mechanism}
+\label{tab:expert_ratings_rank_ordering}
+\end{table}
+
+\subsection{Overall Expert Feedback and Recommendations}
+\label{subsec:overall_expert_feedback_recommendations}
+
+Overall, the expert evaluation indicated that the integrated models effectively reflect common vulnerability management practices, providing useful mechanisms for classification, remediation, and prioritization. Experts highlighted the practicality and clear alignment with current industry approaches, with one expert noting explicitly: \enquote{These integrated models reflect well how we manage open-source vulnerabilities in practice.}
+
+Nevertheless, the evaluation identified areas for further improvement, particularly regarding clearer communication of placeholder scores, and the inclusion of compliance as a key cybersecurity driver: \enquote{Compliance is one of the drivers for cybersecurity and must always be considered.} Additionally, experts suggested more granular grouping or filtering by technology stack or business units to enhance the usability of the rank-ordering mechanism. These considerations represent potential avenues for future enhancements of the framework.
+
+\section{Summary}
+
+This evaluation has demonstrated that the implemented system effectively meets all defined functional and non-functional requirements. The expert evaluation further validated the practical relevance and applicability of the multidimensional classification and remediation models, highlighting their alignment with common industry practices. Additionally, constructive feedback from domain experts identified opportunities for future enhancements, particularly concerning clearer communication of placeholder scores, improved grouping capabilities, and the integration of compliance considerations. Overall, the results confirm that the proposed solution provides a robust, scalable, and user-centric approach to vulnerability management.

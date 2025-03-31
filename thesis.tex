@@ -1,0 +1,151 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Do not change this document unless you know what you're doing! %%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% To write your thesis, edit the following files:
+% * myconfiguration.sty
+% * mybibliography.bib
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt,a4paper,twoside,openright]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{myconfiguration,osrthesis}
+\usepackage[backend=biber,style=apa]{biblatex}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\setlength{\headheight}{15pt}
+
+\DeclareLanguageMapping{ngerman}{ngerman-apa}
+\DeclareLanguageMapping{british}{british-apa}
+
+\addbibresource[datatype=bibtex]{mybibliography.bib}
+
+\title{\thesistitle}
+\author{\thesisauthorgivenname\ \thesisauthorsurname}
+\date{\thesissubmissiondate}
+
+
+\begin{document}
+\maketitle
+\shipout\null
+
+\renewcommand{\chaptername}{}  % Remove 'Chapter' in chapter headings
+
+%%%%%%%%%%%%%%%%% PREFIX SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{roman}
+\headerstyleprefixsection
+
+%% Remove the page breaks between chapters
+\makeatletter
+\renewcommand\chapter{\par%
+  \thispagestyle{plain}%
+  \global\@topnum\z@
+  \@afterindentfalse
+  \secdef\@chapter\@schapter}
+\makeatother
+
+\ifthenelse{\equal{\thesislanguage}{German}}
+{ %true
+\chapter*{Eidesstattliche Erklärung}
+\label{ch:eidesstattliche_erklaerung}
+
+Ich versichere, dass ich die Arbeit ohne fremde Hilfe und ohne Benutzung anderer als der angegebenen Quellen angefertigt habe und dass die Arbeit in gleicher oder ähnlicher Form noch keiner anderen Prüfungsbehörde vorgelegen hat und von dieser als Teil einer Prüfungsleistung angenommen wurde. 
+Alle Ausführungen, die wörtlich oder sinngemäß übernommen wurden, sind als solche gekennzeichnet. 
+}
+{ %false
+\chapter*{Declaration of Originality}
+\label{ch:declaration_of_originality}
+I confirm that I have written this thesis unaided and without using sources other than those listed and that this thesis has never been submitted to another examination authority and accepted as part of an examination achievement, neither in this form nor in a similar form. All content that was taken from a third party either verbatim or in substance has been acknowledged as such.
+The submitted electronic version of the thesis matches the printed version. 
+}
+
+\vspace{.5in}
+\makebox[3in]{\hrulefill} \\
+\thesissubmissioncity, \printdate{\thesissubmissiondate}
+
+\ifthenelse{\equal{\thesislanguage}{German}}
+{ %true
+\chapter*{Lizenz}\label{ch:lizenz}
+
+Diese Arbeit unterliegt der Creative Commons Attribution 4.0 International Lizenz (CC BY 4.0), \url{https://creativecommons.org/licenses/by/4.0/}
+}
+{ %false
+\chapter*{License}
+\label{ch:license}
+
+This work is licensed under the Creative Commons Attribution 4.0 International license (CC BY 4.0), see \url{https://creativecommons.org/licenses/by/4.0/}
+}
+
+\vspace{.5in}
+\makebox[3in]{\hrulefill} \\
+\thesissubmissioncity, \printdate{\thesissubmissiondate}
+
+%% Re-install the page breaks between chapters
+\makeatletter
+\renewcommand\chapter{\if@openright\cleardoublepage\else\clearpage\fi
+  \global\@topnum\z@
+  \@afterindentfalse
+  \secdef\@chapter\@schapter}
+\makeatother
+
+\fancypagestyle{empty}{
+  \fancyhf{} % Clear all headers and footers
+  \renewcommand{\headrulewidth}{0pt} % Remove header rule
+  \renewcommand{\footrulewidth}{0pt} % Remove footer rule
+}
+
+\chapter*{Abstract}\label{chapter:abstract}
+\input contents/abstract.tex
+
+\ifthenelse{\equal{\thesislanguage}{German}}
+  { % true
+    \chapter*{Zusammenfassung}\label{chapter:zusammenfassung}
+    \input contents/zusammenfassung.tex
+  } { %false
+  }
+
+\tableofcontents
+\listoffigures
+\listoftables
+\input{contents/acronyms.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%% MAIN SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\cleardoublepage
+\pagenumbering{arabic}
+\headerstylemainsection
+
+\input{contents/introduction.tex}
+\input{contents/literature-review.tex}
+\input{contents/requirements.tex}
+\input{contents/multidimensional-framework.tex}
+\input{contents/design.tex}
+\input{contents/implementation.tex}
+\input{contents/evaluation.tex}
+\input{contents/conclusions.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%% CLOSING SECTIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{appendices}
+
+  \renewcommand{\setthesection}{\Alph{section}}
+  \renewcommand{\thesection}{\Alph{section}}
+  \headerstyleclosingsection\
+  \renewcommand\sectionmark[1]{\markright{\thesection : #1}} % Appendix A. => Appendix A:
+
+  \input contents/appendices.tex
+\end{appendices}
+
+\cleardoublepage
+\renewcommand\bibname{\referencesname}
+\addcontentsline{toc}{chapter}{\referencesname}
+\printbibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
